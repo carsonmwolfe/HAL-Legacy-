@@ -10,10 +10,11 @@ import re
 import datetime
 import os
 import random
-import TokenDoc
 
 
-os.system('/home/pi/desktop/Backup')
+
+
+#os.system('/home/pi/desktop/Backup')
 
 CREATOR_ID="285641499385921547"
 HAL_ID="493927329261813770"
@@ -39,6 +40,10 @@ Months = {1: "January",
 10: "October",
 11: "November",
 12: "December"}
+
+@client.event
+async def on_ready():
+    await client.change_presence(game=discord.Game(name="2001 A Space Odyssey ",type=1,url="https://www.twitch.tv/mdedits_"))
 
 @client.event
 async def on_message(message):
@@ -109,13 +114,22 @@ async def on_message(message):
     #if str(message.content).upper('*SHUTDOWN'):
      #   if message.author.id==Creator_ID:
       #      client.loop.run_until_complete(client.logout())
+
+
+      
             
 
     #    
     if str(message.content).upper()==("*RESTART"): 
         if message.author.id==CREATOR_ID:
-            client.loop.run_until_complete(client.logout())
-            os.system("python3 /home/pie/ Hal.py")
+            
+            #client.loop.run_until_complete(client.logout())
+            os.system(r"python C:\users\cmwol\desktop\python\Hal.py")
+            raise SystemExit
+            #os.system("python3 /home/pi/Hal.py")
+
+
+            
 
                 
     
@@ -149,9 +163,11 @@ async def on_message(message):
 
                                                
     if str(message.content).upper().startswith("*PLAY|"):
-        if Player!=None:
-            if Player.is_playing():
-                Player.stop()
+
+        #if Player!=None:
+
+         #   if Player.is_playing():
+          #      Player.stop()
         try:
             query_string = urllib.parse.urlencode({"search_query" : str(message.content).split('|')[1]})
             req = urllib.request.Request("http://www.youtube.com/results?" + query_string)
@@ -191,5 +207,6 @@ async def on_server_join(server):
      #   return
     #me = await client.get_user_info('ID')
     #await client.send_message(me, "Hello!")
-     
-client.run(TokenDoc.token)
+    
+
+client.loop.run_until_complete(client.start(("NDkzOTI3MzI5MjYxODEzNzcw.Dye4Ww.9738_jdBTy51BdoGxs91P2CEqYk")))
