@@ -1,4 +1,4 @@
- #Created November 2018
+#Created November 2018
 
 
 #Things To Add/Fix
@@ -58,6 +58,12 @@ async def on_ready():
     await client.change_presence(game=discord.Game(name="2001 A Space Odyssey ",type=1,url="https://www.twitch.tv/mdedits_"))
 
 @client.event
+async def on_join():
+    for role in server.roles:
+        if str(role) == "Member":
+            await client.add_roles(Member,role)
+            
+@client.event
 async def on_message(message):
     global Player
     global Blocked
@@ -83,6 +89,14 @@ async def on_message(message):
         await client.send_message(message.channel, embed=em)
     if str(message.content).upper()=="*INTERSTELLAR":
         await client.send_file(message.channel,r"C:\Users\cmwol\Desktop\interstellar_poster_0.JPG")
+    if str(message.content).upper()=="*DONATION":
+        em = discord.Embed(colour=3447003)
+        em.set_author(name="If you want to support MD financially here is a link to his donation page: https://streamlabs.com/MDLive_ ")
+        await client.send_message(message.channel, embed=em)
+    if str(message.content).upper()=='*STEAM':
+        em = discord.Embed(colour=3447003)
+        em.set_author(name="MD's steam profile: https://steamcommunity.com/user/cngp-prrd/TDRQTWQC/")
+        await client.send_message(message.channel, embed=em)
     if str(message.content).upper()=='*TEST':
         em = discord.Embed(colour=3447003)
         em.set_author(name="Test Complete, Im Online!")
@@ -104,8 +118,8 @@ async def on_message(message):
                 await client.send_message(message.channel, "!Impeachrequest|eat my shorts")
             await client.send_message(message.channel, "Impeach spam complete")
 
-    if str(message.content).upper().startswith("*KD|"):
-        username=str
+    ##if str(message.content).upper().startswith("*KD|"):
+      ##  username=str
 
     if str(message.content).upper().startswith("*KDCOMP|"):
         username=str(message.content).split('|')[1]
@@ -131,7 +145,6 @@ async def on_message(message):
         KD=req[60590:].split('"},{"label":"KDA"')[0].split('"displayValue":"')[1]
         await client.send_message(message.channel,"PVP Quickplay KD:{0}".format(KD))
 
-     
         
     #Block/Unblock Feature 
     if str(message.content).upper().startswith("*BLOCK|"):
