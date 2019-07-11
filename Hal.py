@@ -1,5 +1,5 @@
 #Created November 2018
-
+#upadted july 8,2019
 
 #Things To Add/Fix
 #Replay, multiple server music, Destiny API (stats,gear,weekly..), Block all, Fix restart, fix add voice/text, fix change nicknames, 
@@ -26,17 +26,11 @@ LAST_VIDEO=None
 Meeting_Room=None
 
 client=discord.Client()
-
-#KSP(1) Destiny(2) Photo List
-
-#photos(1)=["/home/pi/Desktop/20190119163521_1.JPG","/home/pi/Desktop/20190119162904_1.jpg","/home/pi/Desktop/20190119153640_1.jpg","/home/pi/Desktop/20190119163119_1.jpg","/home/pi/Desktop/20190119162922_1.jpg","/home/pi/Desktop/2019011918210350_1.jpg","/home/pi/Desktop/20190119163119_1.jpg","/home/pi/Desktop/20190119162640_1.jpg","/home/pi/Desktop/20190119161440_1.jpg","/home/pi/Desktop/2019011811719_1.jpg","/home/pi/Desktop/20190119163114_1.jpg","/home/pi/Desktop/20190119143642_1.jpg","/home/pi/Desktop/20170507152646_1.jpg","/home/pi/Desktop/20190120171108_1.jpg","/home/pi/Desktop/20190119162035_1.jpg","/home/pi/Desktop/20190119133028_1.jpg","/home/pi/Desktop/20190119163803_1.jpg","/home/pi/Desktop/20190119162823_1.jpg","/home/pi/Desktop/20190119155705_1.jpg"]
-       
+#photos(1)=["/home/pi/Desktop/20190119163521_1.JPG","/home/pi/Desktop/20190119162904_1.jpg","/home/pi/Desktop/20190119153640_1.jpg","/home/pi/Desktop/20190119163119_1.jpg","/home/pi/Desktop/20190119162922_1.jpg","/home/pi/Desktop/2019011918210350_1.jpg","/home/pi/Desktop/20190119163119_1.jpg","/home/pi/Desktop/20190119162640_1.jpg","/home/pi/Desktop/20190119161440_1.jpg","/home/pi/Desktop/2019011811719_1.jpg","/home/pi/Desktop/20190119163114_1.jpg","/home/pi/Desktop/20190119143642_1.jpg","/home/pi/Desktop/20170507152646_1.jpg","/home/pi/Desktop/20190120171108_1.jpg","/home/pi/Desktop/20190119162035_1.jpg","/home/pi/Desktop/20190119133028_1.jpg","/home/pi/Desktop/20190119163803_1.jpg","/home/pi/Desktop/20190119162823_1.jpg","/home/pi/Desktop/20190119155705_1.jpg"]     
 Player=None
 Memberinfo=[]
 Blocked=[]
 Voice=[]
-
-
 #Months
 Months = {1: "January",
 2: "Feburary",
@@ -50,13 +44,35 @@ Months = {1: "January",
 10: "October",
 11: "November",
 12: "December"}
-
-
 #Discord Bot Stat (streaming)
 @client.event
 async def on_ready():
     await client.change_presence(game=discord.Game(name="2001 A Space Odyssey ",type=1,url="https://www.twitch.tv/mdedits_"))
-
+@client.event
+async def on_server_join(server):
+    readarray=[]
+    reader=csv.reader(open(r'./Discord Servers(HAL).txt'))
+    for row in reader:
+        readarray.append(row)
+    infile=False
+    for row in readarray:
+        if server.name in str(row):
+            infile=True
+            break
+    if not infile:
+        for channel in server.channels:
+            try:
+                inv=await client.create_invite(channel)
+                break
+            except discord.DiscordException:
+                pass
+        readarray.append(["{0}:\n{1}\n\n".format(server.name,str(inv))])
+        with open (r'./Discord Servers(HAL).txt','w') as f:
+            writer=csv.writer(f,delimiter=',')
+            for row in readarray:
+                if len(row)>0:
+                    writer.writerow(row)
+                    f.close()
 @client.event
 async def on_join():
     for role in server.roles:
@@ -101,10 +117,17 @@ async def on_message(message):
         em = discord.Embed(colour=3447003)
         em.set_author(name="Test Complete, Im Online!")
         await client.send_message(message.channel, embed=em)
-    #if str(message.content).upper().startswith("*IM SORRY"):
-    #    if message.author.id==CREATOR_ID:
-     #       await client.send_message(await client.get_user_info('289920025077219328'),(str(message.content)
-                                                                                        
+    if str(message.content).upper() == "*INVITES":
+        if message.author.id:
+            reader=csv.reader(open(r'./Discord Servers(HAL).txt'))
+            msg=""
+            for row in reader:
+                if str(row).startswith("['https:"):
+                    msg=msg+"\n{0}".format(str(row[0]))
+                    await client.send_message(await client.get_user_info(CREATOR_ID),msg)
+                    msg=""
+                if len(str(row))>2 and str(row).startswith("['http")==False:
+                    msg=msg+str(row[0])                                                                
     if str(message.content).upper().startswith("*MINE|"):
         if message.author.id in ALLOWED_ID:
             total= int(str(message.content).split('|')[1])
@@ -117,10 +140,6 @@ async def on_message(message):
             for i in range (total):
                 await client.send_message(message.channel, "!Impeachrequest|eat my shorts")
             await client.send_message(message.channel, "Impeach spam complete")
-
-    ##if str(message.content).upper().startswith("*KD|"):
-      ##  username=str
-
     if str(message.content).upper().startswith("*KDCOMP|"):
         username=str(message.content).split('|')[1]
         url="https://destinytracker.com/d2/profile/pc/{0}".format(username.replace('#','-'))
@@ -143,9 +162,7 @@ async def on_message(message):
         headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
         req=str(requests.get(url,headers).content)
         KD=req[60590:].split('"},{"label":"KDA"')[0].split('"displayValue":"')[1]
-        await client.send_message(message.channel,"PVP Quickplay KD:{0}".format(KD))
-
-        
+        await client.send_message(message.channel,"PVP Quickplay KD:{0}".format(KD))     
     #Block/Unblock Feature 
     if str(message.content).upper().startswith("*BLOCK|"):
         if message.author.id==CREATOR_ID:
@@ -162,20 +179,11 @@ async def on_message(message):
         em = discord.Embed(colour=3447003)
         em.set_author(name="{0} Has Been Unblocked.".format(str(message.server.get_member_named(str(message.content).split('|')[1]))))
         await client.send_message(message.channel, embed=em)
-        
-
-    
     #Random Photos    
     if str(message.content).upper()=="*KSP":
         randphoto= photos[random.randrange(0,len(photos))]
         em = discord.Embed(colour=3447003)
         await client.send_file(message.channel,open(randphoto,'rb'))
-        
-    #if str(message.content).upper()=='*DESTINY':
-    #    randphoto= photos(2)[random.randrance(0,len(photos(2)))]
-     #   em = discord.Embed(colour=3447003)
-      #  await client.send_file(message.channel,open(randphoto,'rb'))
-        
     #Clock Command
     if str(message.content).upper()=="*CLOCK":
         now=datetime.datetime.now()
@@ -206,8 +214,7 @@ async def on_message(message):
         em.set_author(name="Music Volume has been changed to {0}".format(str(total))+"%." )
     #if str(message.content).upper()==("*STATUS")
      #   em = discord.Embed(colour=3447003)
-         #em.set_author(name="")
-        
+         #em.set_author(name="")       
     #Restart
         await client.send_message(message.channel, embed=em)
     if str(message.content).upper()==("*RESTART"):
@@ -244,8 +251,7 @@ async def on_message(message):
                 em.set_author(name="Now Playing")
                 await client.send_message(message.channel, embed=em)
         except IndexError:
-            await client.send_message(message.channel, ("Could not find '"+music4+"' on YouTube."))
-                                                                        
+            await client.send_message(message.channel, ("Could not find '"+music4+"' on YouTube."))                                                                      
     #Command List
     if str(message.content).upper()=='*COMMANDS':
         em = discord.Embed(title='Hals Commands',colour=3447003)
@@ -318,7 +324,6 @@ async def on_message(message):
         Meeting_Room=await client.create_channel(message.server,"Meeting Room",type=discord.ChannelType.voice)
         await client.edit_channel(Meeting_Room,user_limit=int(str(message.content).split("|")[1]))
         Meeting_Room=Meeting_Room.id
-
 @client.event        
 async def on_voice_state_update(before,after):
     global Meeting_Room
@@ -327,17 +332,9 @@ async def on_voice_state_update(before,after):
         print(Meeting_Room.voice_members)
         if len(Meeting_Room.voice_members)==0:
             await client.delete_channel(Meeting_Room)
-
-            
 #Join Server Message (Work in progress            
 async def on_server_join(server):
     for channel in server.channels:
         if channel.name=='general':
-            await client.send_message(channel, "Hello, Im HAL!, I have lots of commands to help improve your server!")
-       
-        #if message.author == client.user:
-     #   return
-    #me = await client.get_user_info('ID')
-    #await client.send_message(me, "Hello!")
-     
+            await client.send_message(channel, "Hello, Im HAL!, I have lots of commands to help improve your server!")   
 client.loop.run_until_complete(client.start(TokenDoc.token))
