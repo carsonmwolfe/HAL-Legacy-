@@ -17,7 +17,7 @@ import random
 import requests
 import TokenDoc
 
-os.system('/home/pi/desktop/Backup')
+#os.system('/home/pi/desktop/Backup')
 
 CREATOR_ID="285641499385921547"
 HAL_ID="493927329261813770"
@@ -76,8 +76,8 @@ async def on_server_join(server):
 @client.event
 async def on_join():
     for role in server.roles:
-        if str(role) == "Member":
-            await client.add_roles(Member,role)
+        if str(role) == "Swarm":
+            await client.add_roles(Swarm,role)
             
 @client.event
 async def on_message(message):
@@ -97,6 +97,8 @@ async def on_message(message):
         await client.send_message(message.channel, embed=em)
     if str(message.content).upper()=="*CURSEDIMAGE":
         await client.send_file(message.channel,r"/home/pi/Desktop/IMG_1679.JPG")
+    if str(message.content).upper()=="*THRONEMAP":
+        await client.send_file(message.channel,r"/home/pi/Desktop/Photos/Map.png")
     if str(message.content).upper()=="*SOCIALISM":
         await client.send_file(message.channel,r"//home/pi/Desktop/IMG_6969.JPG")
     if str(message.content).upper()=="*BIRTHDAY":
@@ -197,7 +199,9 @@ async def on_message(message):
         em = discord.Embed(colur=3447003,description="{0} {1}, {2}\n{3}:{4} {5}".format(Months[now.month],now.day,now.year,str(hour),str(now.minute),AMPM))
         await client.send_message(message.channel, embed=em)
     #Pause/Resume
-    if str(message.content).upper()==("*PAUSE"):
+    if str(message.content).upper()
+    
+    ==("*PAUSE"):
         Player.pause()
         em = discord.Embed(colour=3447003)
         em.set_author(name="Music is Paused.")
@@ -338,3 +342,4 @@ async def on_server_join(server):
         if channel.name=='general':
             await client.send_message(channel, "Hello, Im HAL!, I have lots of commands to help improve your server!")   
 client.loop.run_until_complete(client.start(TokenDoc.token))
+
