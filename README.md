@@ -14,25 +14,6 @@ Next Update: October 14, 2019
 HAL Status : Down for maintenance 
 
 
-Recent Patch Notes
-
-Version 1.5 | March 15, 2019 
-
---- Fixed ---
-- Fixed an issue where users could use the block message feature against the owner 
-- Fixed an issue causing HAL to crash upon playing two or more songs
-- Fixed an issue where users could crash HAL upon inputing the "Restart" Command 
 
 
---- Added --- 
--  Muting and unMuting for Music in voice channels 
-- Repeating Last Played Song 
-- Clock Feature 
-- *KDOverall|Username [Which displays your overall Destiny 2 PVP KD ] 
-- Updated Command List
 
-
---- Whats Coming ---
-- Queues for Music in Voice channels 
-- More user friendly 
-- More Commands 
