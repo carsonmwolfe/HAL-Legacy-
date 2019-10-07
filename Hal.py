@@ -20,8 +20,6 @@ HAL_ID="493927329261813770"
 ALLOWED_ID=["322490168034590732","289920025077219328","305845952986480650","285641499385921547"]
 LAST_VIDEO=None
 Meeting_Room=None
-
-
 client=discord.Client()
 #photos(1)=["/home/pi/Desktop/20190119163521_1.JPG","/home/pi/Desktop/20190119162904_1.jpg","/home/pi/Desktop/20190119153640_1.jpg","/home/pi/Desktop/20190119163119_1.jpg","/home/pi/Desktop/20190119162922_1.jpg","/home/pi/Desktop/2019011918210350_1.jpg","/home/pi/Desktop/20190119163119_1.jpg","/home/pi/Desktop/20190119162640_1.jpg","/home/pi/Desktop/20190119161440_1.jpg","/home/pi/Desktop/2019011811719_1.jpg","/home/pi/Desktop/20190119163114_1.jpg","/home/pi/Desktop/20190119143642_1.jpg","/home/pi/Desktop/20170507152646_1.jpg","/home/pi/Desktop/20190120171108_1.jpg","/home/pi/Desktop/20190119162035_1.jpg","/home/pi/Desktop/20190119133028_1.jpg","/home/pi/Desktop/20190119163803_1.jpg","/home/pi/Desktop/20190119162823_1.jpg","/home/pi/Desktop/20190119155705_1.jpg"]     
 commands = []
@@ -30,7 +28,6 @@ Player=None
 Memberinfo=[]
 Blocked=[]
 Voice=[]
-
 Months = {1: "January",
 2: "Feburary",
 3: "March",
@@ -43,7 +40,6 @@ Months = {1: "January",
 10: "October",
 11: "November",
 12: "December"}
-
 #Discord Bot Stat (streaming)
 @client.event
 async def on_ready():
@@ -267,15 +263,7 @@ async def on_message(message):
     #    server.get_member_named(str(message.content).split('|')[1])
     #    client.change_nickname(message.content.replace('IN':str(time.status.offline))
     #if discord.member.get_user_info = status.online
-    #    server.get_member_named(str('nickname'):
-        
-    #if str(message.content).upper()=="*ADDCVOICE":
-    #    await client.create_channel(message.server, 'Voice', type=discord.ChannelType.Voice)
-    #if str(message.content).upper()=='*ADDTEXT':
-    #    my_perms = discord.PermissionOverwrite(read_messages=True)                                        
-    #    await client.create_channel(server, 'secret', everyone, mine)
-    #if str(message.content).upper().startswith("*IM SORRY"):
-    #   await client.send_message(await client.get_user_info('289920025077219328'),(str(message.content)))  
+    #    server.get_member_named(str('nickname'):  
     #Youtube_DL Music System                                            
     if str(message.content).upper().startswith("*PLAY|"):
         if Player!=None:
