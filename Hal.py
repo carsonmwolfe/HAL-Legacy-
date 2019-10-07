@@ -202,13 +202,13 @@ async def on_message(message):
             client.loop.run_until_complete(client.logout())
             os.system("python3 /home/pi/Hal.py")
             raise SystemExit
-    if str(message.content).upper()==("*REPEAT"):
-        if Player!=None:
-            if Player.is_playing():
-                Player.stop()
-        try:
-            query_string = urllib.parse.urlencode({"search_query" : str(message.content).split('|')[1]})
-            req = urllib.request.Request("http://www.youtube.com/results?" + query_string)
+    #if str(message.content).upper()==("*REPEAT"):
+    #    if Player!=None:
+    #        if Player.is_playing():
+    #            Player.stop()
+    #    try:
+    #        query_string = urllib.parse.urlencode({"search_query" : str(message.content).split('|')[1]})
+    #        req = urllib.request.Request("http://www.youtube.com/results?" + query_string)
             if message.server.get_member_named("HAL").voice.voice_channel == None:
                 channel=message.author.voice.voice_channel
                 await client.join_voice_channel(channel)
