@@ -20,9 +20,8 @@ ALLOWED_ID=["322490168034590732","289920025077219328","305845952986480650","2856
 LAST_VIDEO=None
 Meeting_Room=None
 client=discord.Client()
-#photos(1)=["/home/pi/Desktop/20190119163521_1.JPG","/home/pi/Desktop/20190119162904_1.jpg","/home/pi/Desktop/20190119153640_1.jpg","/home/pi/Desktop/20190119163119_1.jpg","/home/pi/Desktop/20190119162922_1.jpg","/home/pi/Desktop/2019011918210350_1.jpg","/home/pi/Desktop/20190119163119_1.jpg","/home/pi/Desktop/20190119162640_1.jpg","/home/pi/Desktop/20190119161440_1.jpg","/home/pi/Desktop/2019011811719_1.jpg","/home/pi/Desktop/20190119163114_1.jpg","/home/pi/Desktop/20190119143642_1.jpg","/home/pi/Desktop/20170507152646_1.jpg","/home/pi/Desktop/20190120171108_1.jpg","/home/pi/Desktop/20190119162035_1.jpg","/home/pi/Desktop/20190119133028_1.jpg","/home/pi/Desktop/20190119163803_1.jpg","/home/pi/Desktop/20190119162823_1.jpg","/home/pi/Desktop/20190119155705_1.jpg"]     
 commands = []
-command = []                         
+command = []                        
 Player=None
 Memberinfo=[]
 Blocked=[]
@@ -72,7 +71,7 @@ async def on_server_join(server):
 async def on_join():
     for role in server.roles:
         if str(role) == "Swarm":
-            await client.add_roles(Swarm,role)   
+            await client.add_roles(Swarm,role)
 @client.event
 async def on_message(message):
     global Player
@@ -88,7 +87,7 @@ async def on_message(message):
     if str(message.content).upper()=='*CODE':
         em = discord.Embed(colour=3447003)
         em.set_author(name="Github Link: https://bit.ly/2QHtYal")
-        await client.send_message(message.channel, embed=em) 
+        await client.send_message(message.channel, embed=em)
     if str(message.content).upper()=="*THRONEMAP":
         await client.send_file(message.channel,r"/home/pi/Desktop/Photos/Map.png")
     if str(message.content).upper()=="*BIRTHDAY":
@@ -117,13 +116,13 @@ async def on_message(message):
                     await client.send_message(await client.get_user_info(CREATOR_ID),msg)
                     msg=""
                 if len(str(row))>2 and str(row).startswith("['http")==False:
-                    msg=msg+str(row[0])                                               
+                    msg=msg+str(row[0])
   #  if str(message.content).upper().startswith("*MINE|"):
   #      if message.author.id in ALLOWED_ID:
   #          total= int(str(message.content).split('|')[1])
   #          for i in range (total):
   #              await client.send_message(message.channel, "!Mine")
-  #          await client.send_message(message.channel, "!Transfer|{0}|{1}" .format(str (total),str (message.author)))       
+  #          await client.send_message(message.channel, "!Transfer|{0}|{1}" .format(str (total),str (message.author)))
     if str(message.content).upper().startswith("*KDCOMP|"):
         username=str(message.content).split('|')[1]
         url="https://destinytracker.com/d2/profile/pc/{0}".format(username.replace('#','-'))
@@ -154,7 +153,7 @@ async def on_message(message):
             await client.send_message(message.channel, embed=em)
         else:
             em = discord.Embed(colour=3447003)
-            em.set_author(name="This is a Admin Only command.")                                       
+            em.set_author(name="This is a Admin Only command.")
     if str(message.content).upper().startswith("*UNBLOCK|"):
         Blocked.remove(message.server.get_member_named(str(message.content).split('|')[1]))
         em = discord.Embed(colour=3447003)
@@ -195,7 +194,7 @@ async def on_message(message):
         em.set_author(name="Music Volume has been changed to {0}".format(str(total))+"%." )
     #if str(message.content).upper()==("*STATUS")
      #   em = discord.Embed(colour=3447003)
-         #em.set_author(name="")   
+         #em.set_author(name="")
     #Restart
         await client.send_message(message.channel, embed=em)
     if str(message.content).upper()==("*RESTART"):
@@ -232,7 +231,7 @@ async def on_message(message):
                 em.set_author(name="Now Playing")
                 await client.send_message(message.channel, embed=em)
         except IndexError:
-            await client.send_message(message.channel, ("Could not find '"+music4+"' on YouTube."))                                                                 
+            await client.send_message(message.channel, ("Could not find '"+music4+"' on YouTube."))
     if str(message.content).upper()=='*COMMANDS':
         em = discord.Embed(title='Hals Commands',colour=3447003)
         em=discord.Embed(title="Command List",description="*Add - Will Send an Invite Link to the channel so you can add him to your server.\n\
@@ -263,7 +262,7 @@ async def on_message(message):
     #    client.change_nickname(message.content.replace('IN':str(time.status.offline))
     #if discord.member.get_user_info = status.online
     #    server.get_member_named(str('nickname'):
-    #Youtube_DL Music System                                    
+    #Youtube_DL Music System
     if str(message.content).upper().startswith("*PLAY|"):
         if Player!=None:
             if Player.is_playing():
