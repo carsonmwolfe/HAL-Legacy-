@@ -160,10 +160,10 @@ async def on_message(message):
         em.set_author(name="{0} Has Been Unblocked.".format(str(message.server.get_member_named(str(message.content).split('|')[1]))))
         await client.send_message(message.channel, embed=em)
     #Random Photos
-    if str(message.content).upper()=="*KSP":
-        randphoto= photos[random.randrange(0,len(photos))]
-        em = discord.Embed(colour=3447003)
-        await client.send_file(message.channel,open(randphoto,'rb'))
+   # if str(message.content).upper()=="*KSP":
+   #     randphoto= photos[random.randrange(0,len(photos))]
+   #     em = discord.Embed(colour=3447003)
+   #     await client.send_file(message.channel,open(randphoto,'rb'))
     #Clock Command
     if str(message.content).upper()=="*CLOCK":
         now=datetime.datetime.now()
