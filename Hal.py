@@ -21,7 +21,7 @@ LAST_VIDEO=None
 Meeting_Room=None
 client=discord.Client()
 commands = []
-command = []                        
+command = []
 Player=None
 Memberinfo=[]
 Blocked=[]
@@ -301,7 +301,7 @@ async def on_message(message):
         Meeting_Room=await client.create_channel(message.server,"Meeting Room",type=discord.ChannelType.voice)
         await client.edit_channel(Meeting_Room,user_limit=int(str(message.content).split("|")[1]))
         Meeting_Room=Meeting_Room.id
-#@client.event  
+#@client.event
 #async def on_voice_state_update(before,after):
 #    global Meeting_Room
 #    if before.voice_channel==after.server.get_channel(Meeting_Room):
