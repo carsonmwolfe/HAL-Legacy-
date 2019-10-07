@@ -4,9 +4,9 @@
 #Replay, multiple server music, Destiny API (stats,gear,weekly..), Block all, Fix restart, fix add voice/text, fix change nicknames, 
 import csv
 import discord
-import asyncio
-import time
-import youtube_dl
+#import asyncio
+#import time
+#import youtube_dl
 import urllib
 import re
 import datetime
@@ -23,7 +23,7 @@ Meeting_Room=None
 client=discord.Client()
 #photos(1)=["/home/pi/Desktop/20190119163521_1.JPG","/home/pi/Desktop/20190119162904_1.jpg","/home/pi/Desktop/20190119153640_1.jpg","/home/pi/Desktop/20190119163119_1.jpg","/home/pi/Desktop/20190119162922_1.jpg","/home/pi/Desktop/2019011918210350_1.jpg","/home/pi/Desktop/20190119163119_1.jpg","/home/pi/Desktop/20190119162640_1.jpg","/home/pi/Desktop/20190119161440_1.jpg","/home/pi/Desktop/2019011811719_1.jpg","/home/pi/Desktop/20190119163114_1.jpg","/home/pi/Desktop/20190119143642_1.jpg","/home/pi/Desktop/20170507152646_1.jpg","/home/pi/Desktop/20190120171108_1.jpg","/home/pi/Desktop/20190119162035_1.jpg","/home/pi/Desktop/20190119133028_1.jpg","/home/pi/Desktop/20190119163803_1.jpg","/home/pi/Desktop/20190119162823_1.jpg","/home/pi/Desktop/20190119155705_1.jpg"]     
 commands = []
-command = []                             
+command = []                            
 Player=None
 Memberinfo=[]
 Blocked=[]
@@ -73,7 +73,7 @@ async def on_server_join(server):
 async def on_join():
     for role in server.roles:
         if str(role) == "Swarm":
-            await client.add_roles(Swarm,role)       
+            await client.add_roles(Swarm,role)     
 @client.event
 async def on_message(message):
     global Player
@@ -118,7 +118,7 @@ async def on_message(message):
                     await client.send_message(await client.get_user_info(CREATOR_ID),msg)
                     msg=""
                 if len(str(row))>2 and str(row).startswith("['http")==False:
-                    msg=msg+str(row[0])                                                                
+                    msg=msg+str(row[0])                                                               
   #  if str(message.content).upper().startswith("*MINE|"):
   #      if message.author.id in ALLOWED_ID:
   #          total= int(str(message.content).split('|')[1])
@@ -131,7 +131,7 @@ async def on_message(message):
         headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
         req=str(requests.get(url,headers).content)
         KD=req.split('"},{"label":"KDA"')[0].split('"displayValue":"')[1]
-        await client.send_message(message.channel,"PVP Competitive KD:{0}".format(KD))   
+        await client.send_message(message.channel,"PVP Competitive KD:{0}".format(KD))
     if str(message.content).upper().startswith("*KDOVERALL|"):
         username=str(message.content).split('|')[1]
         url="https://destinytracker.com/d2/profile/pc/{0}".format(username.replace('#','-'))
@@ -145,7 +145,7 @@ async def on_message(message):
         headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
         req=str(requests.get(url,headers).content)
         KD=req[60590:].split('"},{"label":"KDA"')[0].split('"displayValue":"')[1]
-        await client.send_message(message.channel,"PVP Quickplay KD:{0}".format(KD))     
+        await client.send_message(message.channel,"PVP Quickplay KD:{0}".format(KD)) 
     #Block/Unblock Feature 
     if str(message.content).upper().startswith("*BLOCK|"):
         if message.author.id==CREATOR_ID:
@@ -161,7 +161,7 @@ async def on_message(message):
         em = discord.Embed(colour=3447003)
         em.set_author(name="{0} Has Been Unblocked.".format(str(message.server.get_member_named(str(message.content).split('|')[1]))))
         await client.send_message(message.channel, embed=em)
-    #Random Photos    
+    #Random Photos  
     if str(message.content).upper()=="*KSP":
         randphoto= photos[random.randrange(0,len(photos))]
         em = discord.Embed(colour=3447003)
@@ -189,7 +189,7 @@ async def on_message(message):
         em = discord.Embed(colour=3447003)
         em.set_author(name="Music Has been Resumed.")
     if str(message.content).upper().startswith("*VOLUME|"):
-        Player.volume
+        #Player.volume
         total= int(str(message.content).split('|')[1])
         Player.volume=total/100
         em = discord.Embed(colour=3447003)
@@ -257,14 +257,14 @@ async def on_message(message):
         *KDcomp| Username - Will display the accounts COMP PVP KD. \n\
         *Commands - Display this embed message. \n\
         *Resume - Will resume the current music.")           
-        await client.send_message(message.channel, embed=em) 
+        await client.send_message(message.channel, embed=em)
     #Work in progress
     #if discord.member.get_user_info = status.offline
     #    server.get_member_named(str(message.content).split('|')[1])
     #    client.change_nickname(message.content.replace('IN':str(time.status.offline))
     #if discord.member.get_user_info = status.online
-    #    server.get_member_named(str('nickname'):  
-    #Youtube_DL Music System                                            
+    #    server.get_member_named(str('nickname'):
+    #Youtube_DL Music System                                       
     if str(message.content).upper().startswith("*PLAY|"):
         if Player!=None:
             if Player.is_playing():
@@ -303,11 +303,11 @@ async def on_message(message):
         Meeting_Room=await client.create_channel(message.server,"Meeting Room",type=discord.ChannelType.voice)
         await client.edit_channel(Meeting_Room,user_limit=int(str(message.content).split("|")[1]))
         Meeting_Room=Meeting_Room.id
-#@client.event        
+#@client.event       
 #async def on_voice_state_update(before,after):
 #    global Meeting_Room
 #    if before.voice_channel==after.server.get_channel(Meeting_Room):
-#        Meeting_Room=after.server.get_channel(Meeting_Room)    
+#        Meeting_Room=after.server.get_channel(Meeting_Room)
 #        print(Meeting_Room.voice_members)
 #        if len(Meeting_Room.voice_members)==0:
 #            await client.delete_channel(Meeting_Room) 
