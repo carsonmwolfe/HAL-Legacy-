@@ -123,13 +123,13 @@ async def on_message(message):
   #          for i in range (total):
   #              await client.send_message(message.channel, "!Mine")
   #          await client.send_message(message.channel, "!Transfer|{0}|{1}" .format(str (total),str (message.author)))
-    if str(message.content).upper().startswith("*KDCOMP|"):
-        username=str(message.content).split('|')[1]
-        url="https://destinytracker.com/d2/profile/pc/{0}".format(username.replace('#','-'))
-        headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
-        req=str(requests.get(url,headers).content)
-        KD=req.split('"},{"label":"KDA"')[0].split('"displayValue":"')[1]
-        await client.send_message(message.channel,"PVP Competitive KD:{0}".format(KD))
+  #  if str(message.content).upper().startswith("*KDCOMP|"):
+  #      username=str(message.content).split('|')[1]
+  #      url="https://destinytracker.com/d2/profile/pc/{0}".format(username.replace('#','-'))
+  #      headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
+  #      req=str(requests.get(url,headers).content)
+  #      KD=req.split('"},{"label":"KDA"')[0].split('"displayValue":"')[1]
+  #      await client.send_message(message.channel,"PVP Competitive KD:{0}".format(KD))
     if str(message.content).upper().startswith("*KDOVERALL|"):
         username=str(message.content).split('|')[1]
         url="https://destinytracker.com/d2/profile/pc/{0}".format(username.replace('#','-'))
@@ -137,13 +137,13 @@ async def on_message(message):
         req=str(requests.get(url,headers).content)
         KD=req[66200:].split('"},{"label":"KDA"')[0].split('"displayValue":"')[1]
         await client.send_message(message.channel,"PVP Overall KD:{0}".format(KD))
-    if str(message.content).upper().startswith("*KDQP|"):
-        username=str(message.content).split('|')[1]
-        url="https://destinytracker.com/d2/profile/pc/{0}".format(username.replace('#','-'))
-        headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
-        req=str(requests.get(url,headers).content)
-        KD=req[60590:].split('"},{"label":"KDA"')[0].split('"displayValue":"')[1]
-        await client.send_message(message.channel,"PVP Quickplay KD:{0}".format(KD))
+   # if str(message.content).upper().startswith("*KDQP|"):
+   #     username=str(message.content).split('|')[1]
+   #     url="https://destinytracker.com/d2/profile/pc/{0}".format(username.replace('#','-'))
+   #     headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
+   #     req=str(requests.get(url,headers).content)
+   #     KD=req[60590:].split('"},{"label":"KDA"')[0].split('"displayValue":"')[1]
+   #     await client.send_message(message.channel,"PVP Quickplay KD:{0}".format(KD))
     #Block/Unblock Feature
     if str(message.content).upper().startswith("*BLOCK|"):
         if message.author.id==CREATOR_ID:
