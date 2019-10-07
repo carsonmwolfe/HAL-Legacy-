@@ -10,7 +10,7 @@ import urllib
 import re
 import datetime
 import os
-import random
+#import random
 import requests
 import TokenDoc
 #os.system('/home/pi/desktop/Backup')
@@ -286,10 +286,10 @@ async def on_message(message):
                 channel=message.author.voice.voice_channel
                 try:
                     Player=await message.server.voice_client.create_ytdl_player(link)
-                except:
-                    channel=message.author.voice.voice_channel
-                    await client.join_voice_channel(channel)
-                    Player=await message.server.voice_client.create_ytdl_player(link)
+                #except:
+                #    channel=message.author.voice.voice_channel
+                #    await client.join_voice_channel(channel)
+                #    Player=await message.server.voice_client.create_ytdl_player(link)
                 Player.start()
                 #await  client.send_message(message.channel,"NOW PLAYING:|{0}".format(Player.title))
                 em = discord.Embed(title=Player.title, Duration=Player.duration, colour=3447003)
