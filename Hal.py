@@ -220,18 +220,18 @@ async def on_message(message):
             else:
                 channel=message.author.voice.voice_channel
                 try:
-                    Player=await message.server.voice_client.create_ytdl_player(link)
-                except:
-                    channel=message.author.voice.voice_channel
-                    await client.join_voice_channel(channel)
-                    Player=await message.server.voice_client.create_ytdl_player(link)
-                Player.start()
-                #await  client.send_message(message.channel,"NOW PLAYING:|{0}".format(Player.title))
-                em = discord.Embed(title=Player.title, Duration=Player.duration, colour=3447003)
-                em.set_author(name="Now Playing")
-                await client.send_message(message.channel, embed=em)
-        except IndexError:
-            await client.send_message(message.channel, ("Could not find '"+music4+"' on YouTube."))
+        #            Player=await message.server.voice_client.create_ytdl_player(link)
+        #        except:
+        #            channel=message.author.voice.voice_channel
+        #            await client.join_voice_channel(channel)
+        #            Player=await message.server.voice_client.create_ytdl_player(link)
+        #        Player.start()
+        #        #await  client.send_message(message.channel,"NOW PLAYING:|{0}".format(Player.title))
+        #        em = discord.Embed(title=Player.title, Duration=Player.duration, colour=3447003)
+        #        em.set_author(name="Now Playing")
+        #        await client.send_message(message.channel, embed=em)
+        #except IndexError:
+        #    await client.send_message(message.channel, ("Could not find '"+music4+"' on YouTube."))
     if str(message.content).upper()=='*COMMANDS':
         em = discord.Embed(title='Hals Commands',colour=3447003)
         em=discord.Embed(title="Command List",description="*Add - Will Send an Invite Link to the channel so you can add him to your server.\n\
