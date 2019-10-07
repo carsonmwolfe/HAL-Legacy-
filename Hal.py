@@ -315,12 +315,12 @@ async def on_message(message):
         Meeting_Room=await client.create_channel(message.server,"Meeting Room",type=discord.ChannelType.voice)
         await client.edit_channel(Meeting_Room,user_limit=int(str(message.content).split("|")[1]))
         Meeting_Room=Meeting_Room.id
-@client.event        
-async def on_voice_state_update(before,after):
-    global Meeting_Room
-    if before.voice_channel==after.server.get_channel(Meeting_Room):
-        Meeting_Room=after.server.get_channel(Meeting_Room)    
-        print(Meeting_Room.voice_members)
-        if len(Meeting_Room.voice_members)==0:
-            await client.delete_channel(Meeting_Room) 
+#@client.event        
+#async def on_voice_state_update(before,after):
+#    global Meeting_Room
+#    if before.voice_channel==after.server.get_channel(Meeting_Room):
+#        Meeting_Room=after.server.get_channel(Meeting_Room)    
+#        print(Meeting_Room.voice_members)
+#        if len(Meeting_Room.voice_members)==0:
+#            await client.delete_channel(Meeting_Room) 
 client.loop.run_until_complete(client.start(TokenDoc.token))
