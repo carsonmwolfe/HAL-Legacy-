@@ -311,7 +311,6 @@ async def on_message(message):
                 await client.send_message(message.channel, embed=em)
         except IndexError:
             await client.send_message(message.channel, ("Could not find '"+music4+"' on YouTube."))
-            
     if str(message.content).upper().startswith("*MEETING|"):
         Meeting_Room=await client.create_channel(message.server,"Meeting Room",type=discord.ChannelType.voice)
         await client.edit_channel(Meeting_Room,user_limit=int(str(message.content).split("|")[1]))
@@ -325,9 +324,9 @@ async def on_voice_state_update(before,after):
         if len(Meeting_Room.voice_members)==0:
             await client.delete_channel(Meeting_Room)
 #Join Server Message (Work in progress            
-async def on_server_join(server):
-    for channel in server.channels:
-        if channel.name=='general':
-            await client.send_message(channel, "Hello, Im HAL!, I have lots of commands to help improve your server!")   
+#async def on_server_join(server):
+ #   for channel in server.channels:
+  #      if channel.name=='general':
+   #         await client.send_message(channel, "Hello, Im HAL!, I have lots of commands to help improve your server!")   
 client.loop.run_until_complete(client.start(TokenDoc.token))
 
