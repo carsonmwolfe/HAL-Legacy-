@@ -322,11 +322,5 @@ async def on_voice_state_update(before,after):
         Meeting_Room=after.server.get_channel(Meeting_Room)    
         print(Meeting_Room.voice_members)
         if len(Meeting_Room.voice_members)==0:
-            await client.delete_channel(Meeting_Room)
-#Join Server Message (Work in progress            
-#async def on_server_join(server):
- #   for channel in server.channels:
-  #      if channel.name=='general':
-   #         await client.send_message(channel, "Hello, Im HAL!, I have lots of commands to help improve your server!")   
+            await client.delete_channel(Meeting_Room) 
 client.loop.run_until_complete(client.start(TokenDoc.token))
-
