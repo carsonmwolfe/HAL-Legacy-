@@ -200,7 +200,7 @@ async def on_message(message):
     if str(message.content).upper()==("*RESTART"):
         if message.author.id==CREATOR_ID:
             client.loop.run_until_complete(client.logout())
-            os.system("python3 /home/pi/Hal.py")
+           # os.system("python3 /home/pi/Hal.py")
             raise SystemExit
     #if str(message.content).upper()==("*REPEAT"):
     #    if Player!=None:
@@ -270,7 +270,7 @@ async def on_message(message):
         try:
             query_string = urllib.parse.urlencode({"search_query" : str(message.content).split('|')[1]})
             req = urllib.request.Request("http://www.youtube.com/results?" + query_string)
-            with urllib.request.urlopen(req) as html:
+            #with urllib.request.urlopen(req) as html:
                 searchresults = re.findall(r'href=\"\/watch\?v=(.{11})', html.read().decode())
                 link = ("http://www.youtube.com/watch?v=" + searchresults[0])
             if message.server.get_member_named("HAL").voice.voice_channel == None:
