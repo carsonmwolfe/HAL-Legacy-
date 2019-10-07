@@ -1,9 +1,7 @@
 #Created November 2018
 #upadted july 8,2019
-
 #Things To Add/Fix
 #Replay, multiple server music, Destiny API (stats,gear,weekly..), Block all, Fix restart, fix add voice/text, fix change nicknames, 
-
 import csv
 import discord
 import asyncio
@@ -16,9 +14,7 @@ import os
 import random
 import requests
 import TokenDoc
-
 #os.system('/home/pi/desktop/Backup')
-
 CREATOR_ID="285641499385921547"
 HAL_ID="493927329261813770"
 ALLOWED_ID=["322490168034590732","289920025077219328","305845952986480650","285641499385921547"]
@@ -29,17 +25,11 @@ Meeting_Room=None
 client=discord.Client()
 #photos(1)=["/home/pi/Desktop/20190119163521_1.JPG","/home/pi/Desktop/20190119162904_1.jpg","/home/pi/Desktop/20190119153640_1.jpg","/home/pi/Desktop/20190119163119_1.jpg","/home/pi/Desktop/20190119162922_1.jpg","/home/pi/Desktop/2019011918210350_1.jpg","/home/pi/Desktop/20190119163119_1.jpg","/home/pi/Desktop/20190119162640_1.jpg","/home/pi/Desktop/20190119161440_1.jpg","/home/pi/Desktop/2019011811719_1.jpg","/home/pi/Desktop/20190119163114_1.jpg","/home/pi/Desktop/20190119143642_1.jpg","/home/pi/Desktop/20170507152646_1.jpg","/home/pi/Desktop/20190120171108_1.jpg","/home/pi/Desktop/20190119162035_1.jpg","/home/pi/Desktop/20190119133028_1.jpg","/home/pi/Desktop/20190119163803_1.jpg","/home/pi/Desktop/20190119162823_1.jpg","/home/pi/Desktop/20190119155705_1.jpg"]     
 commands = []
-command = []
-
-                
-                    
-
-
+command = []                             
 Player=None
 Memberinfo=[]
 Blocked=[]
 Voice=[]
-
 
 Months = {1: "January",
 2: "Feburary",
@@ -53,8 +43,6 @@ Months = {1: "January",
 10: "October",
 11: "November",
 12: "December"}
-
-
 
 #Discord Bot Stat (streaming)
 @client.event
@@ -89,8 +77,7 @@ async def on_server_join(server):
 async def on_join():
     for role in server.roles:
         if str(role) == "Swarm":
-            await client.add_roles(Swarm,role)
-            
+            await client.add_roles(Swarm,role)       
 @client.event
 async def on_message(message):
     global Player
@@ -136,23 +123,19 @@ async def on_message(message):
                     msg=""
                 if len(str(row))>2 and str(row).startswith("['http")==False:
                     msg=msg+str(row[0])                                                                
-    if str(message.content).upper().startswith("*MINE|"):
-        if message.author.id in ALLOWED_ID:
-            total= int(str(message.content).split('|')[1])
-            for i in range (total):
-                await client.send_message(message.channel, "!Mine")
-            await client.send_message(message.channel, "!Transfer|{0}|{1}" .format(str (total),str (message.author)))
-
-
-            
+  #  if str(message.content).upper().startswith("*MINE|"):
+   #     if message.author.id in ALLOWED_ID:
+    #        total= int(str(message.content).split('|')[1])
+     #       for i in range (total):
+      #          await client.send_message(message.channel, "!Mine")
+       #     await client.send_message(message.channel, "!Transfer|{0}|{1}" .format(str (total),str (message.author)))         
     if str(message.content).upper().startswith("*KDCOMP|"):
         username=str(message.content).split('|')[1]
         url="https://destinytracker.com/d2/profile/pc/{0}".format(username.replace('#','-'))
         headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
         req=str(requests.get(url,headers).content)
         KD=req.split('"},{"label":"KDA"')[0].split('"displayValue":"')[1]
-        await client.send_message(message.channel,"PVP Competitive KD:{0}".format(KD))
-        
+        await client.send_message(message.channel,"PVP Competitive KD:{0}".format(KD))   
     if str(message.content).upper().startswith("*KDOVERALL|"):
         username=str(message.content).split('|')[1]
         url="https://destinytracker.com/d2/profile/pc/{0}".format(username.replace('#','-'))
@@ -160,7 +143,6 @@ async def on_message(message):
         req=str(requests.get(url,headers).content)
         KD=req[66200:].split('"},{"label":"KDA"')[0].split('"displayValue":"')[1]
         await client.send_message(message.channel,"PVP Overall KD:{0}".format(KD))
-
     if str(message.content).upper().startswith("*KDQP|"):
         username=str(message.content).split('|')[1]
         url="https://destinytracker.com/d2/profile/pc/{0}".format(username.replace('#','-'))
@@ -177,8 +159,7 @@ async def on_message(message):
             await client.send_message(message.channel, embed=em)
         else:
             em = discord.Embed(colour=3447003)
-            em.set_author(name="This is a Admin Only command.")
-                                               
+            em.set_author(name="This is a Admin Only command.")                                          
     if str(message.content).upper().startswith("*UNBLOCK|"):
         Blocked.remove(message.server.get_member_named(str(message.content).split('|')[1]))
         em = discord.Embed(colour=3447003)
@@ -257,9 +238,6 @@ async def on_message(message):
                 await client.send_message(message.channel, embed=em)
         except IndexError:
             await client.send_message(message.channel, ("Could not find '"+music4+"' on YouTube."))                                                                      
-
-
-    
     if str(message.content).upper()=='*COMMANDS':
         em = discord.Embed(title='Hals Commands',colour=3447003)
         em=discord.Embed(title="Command List",description="*Add - Will Send an Invite Link to the channel so you can add him to your server.\n\
@@ -283,12 +261,7 @@ async def on_message(message):
         *KDcomp| Username - Will display the accounts COMP PVP KD. \n\
         *Commands - Display this embed message. \n\
         *Resume - Will resume the current music.")           
-        await client.send_message(message.channel, embed=em)
-
-
-
-
-        
+        await client.send_message(message.channel, embed=em) 
     #Work in progress
     #if discord.member.get_user_info = status.offline
      #   server.get_member_named(str(message.content).split('|')[1])
@@ -303,7 +276,6 @@ async def on_message(message):
       #  await client.create_channel(server, 'secret', everyone, mine)
     #if str(message.content).upper().startswith("*IM SORRY"):
      #  await client.send_message(await client.get_user_info('289920025077219328'),(str(message.content)))  
-
     #Youtube_DL Music System                                            
     if str(message.content).upper().startswith("*PLAY|"):
         if Player!=None:
