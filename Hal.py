@@ -90,18 +90,6 @@ async def on_message(message):
         await client.send_message(message.channel, embed=em)
     if str(message.content).upper()=="*THRONEMAP":
         await client.send_file(message.channel,r"/home/pi/Desktop/Photos/Map.png")
-    if str(message.content).upper()=="*BIRTHDAY":
-        em = discord.Embed(colour=3447003)
-        em.set_author(name="January,9th")
-        await client.send_message(message.channel, embed=em)
-    if str(message.content).upper()=="*DONATION":
-        em = discord.Embed(colour=3447003)
-        em.set_author(name="If you want to support MD financially here is a link to his donation page: https://streamlabs.com/MDLive_ ")
-        await client.send_message(message.channel, embed=em)
-    if str(message.content).upper()=='*STEAM':
-        em = discord.Embed(colour=3447003)
-        em.set_author(name="MD's steam profile: https://steamcommunity.com/user/cngp-prrd/TDRQTWQC/")
-        await client.send_message(message.channel, embed=em)
     if str(message.content).upper()=='*TEST':
         em = discord.Embed(colour=3447003)
         em.set_author(name="Test Complete, Im Online!")
@@ -301,12 +289,4 @@ async def on_message(message):
         Meeting_Room=await client.create_channel(message.server,"Meeting Room",type=discord.ChannelType.voice)
         await client.edit_channel(Meeting_Room,user_limit=int(str(message.content).split("|")[1]))
         Meeting_Room=Meeting_Room.id
-#@client.event
-#async def on_voice_state_update(before,after):
-#    global Meeting_Room
-#    if before.voice_channel==after.server.get_channel(Meeting_Room):
-#        Meeting_Room=after.server.get_channel(Meeting_Room)
-#        print(Meeting_Room.voice_members)
-#        if len(Meeting_Room.voice_members)==0:
-#            await client.delete_channel(Meeting_Room)
 client.loop.run_until_complete(client.start(TokenDoc.token))
