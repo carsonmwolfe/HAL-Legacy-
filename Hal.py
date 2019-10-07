@@ -124,11 +124,11 @@ async def on_message(message):
                 if len(str(row))>2 and str(row).startswith("['http")==False:
                     msg=msg+str(row[0])                                                                
   #  if str(message.content).upper().startswith("*MINE|"):
-   #     if message.author.id in ALLOWED_ID:
-    #        total= int(str(message.content).split('|')[1])
-     #       for i in range (total):
-      #          await client.send_message(message.channel, "!Mine")
-       #     await client.send_message(message.channel, "!Transfer|{0}|{1}" .format(str (total),str (message.author)))         
+  #      if message.author.id in ALLOWED_ID:
+  #          total= int(str(message.content).split('|')[1])
+  #          for i in range (total):
+  #              await client.send_message(message.channel, "!Mine")
+  #          await client.send_message(message.channel, "!Transfer|{0}|{1}" .format(str (total),str (message.author)))         
     if str(message.content).upper().startswith("*KDCOMP|"):
         username=str(message.content).split('|')[1]
         url="https://destinytracker.com/d2/profile/pc/{0}".format(username.replace('#','-'))
@@ -264,18 +264,18 @@ async def on_message(message):
         await client.send_message(message.channel, embed=em) 
     #Work in progress
     #if discord.member.get_user_info = status.offline
-     #   server.get_member_named(str(message.content).split('|')[1])
-      #  client.change_nickname(message.content.replace('IN':str(time.status.offline))
+    #    server.get_member_named(str(message.content).split('|')[1])
+    #    client.change_nickname(message.content.replace('IN':str(time.status.offline))
     #if discord.member.get_user_info = status.online
-     #   server.get_member_named(str('nickname'):
+    #    server.get_member_named(str('nickname'):
         
     #if str(message.content).upper()=="*ADDCVOICE":
-     #   await client.create_channel(message.server, 'Voice', type=discord.ChannelType.Voice)
+    #    await client.create_channel(message.server, 'Voice', type=discord.ChannelType.Voice)
     #if str(message.content).upper()=='*ADDTEXT':
-     #   my_perms = discord.PermissionOverwrite(read_messages=True)                                        
-      #  await client.create_channel(server, 'secret', everyone, mine)
+    #    my_perms = discord.PermissionOverwrite(read_messages=True)                                        
+    #    await client.create_channel(server, 'secret', everyone, mine)
     #if str(message.content).upper().startswith("*IM SORRY"):
-     #  await client.send_message(await client.get_user_info('289920025077219328'),(str(message.content)))  
+    #   await client.send_message(await client.get_user_info('289920025077219328'),(str(message.content)))  
     #Youtube_DL Music System                                            
     if str(message.content).upper().startswith("*PLAY|"):
         if Player!=None:
