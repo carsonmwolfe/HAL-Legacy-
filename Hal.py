@@ -1,31 +1,44 @@
 #Created November 2018
 #upadted july 8,2019
+
 #Things To Add/Fix
+#Replay, multiple server music, Destiny API (stats,gear,weekly..), Block all, Fix restart, fix add voice/text, fix change nicknames, 
+
 import csv
 import discord
-#import asyncio
-#import time
-#import youtube_dl
+import asyncio
+import time
+import youtube_dl
 import urllib
 import re
 import datetime
 import os
-#import random
+import random
 import requests
 import TokenDoc
+
 #os.system('/home/pi/desktop/Backup')
-CREATOR_ID="285641499385921547"
-HAL_ID="493927329261813770"
+
+CREATOR_ID="653386075095695361"
+HAL_ID="4939273292618"
 ALLOWED_ID=["322490168034590732","289920025077219328","305845952986480650","285641499385921547"]
 LAST_VIDEO=None
 Meeting_Room=None
+time_message=None
+time_array=None
+time_s=0
+
+
 client=discord.Client()
+#photos(1)=["/home/pi/Desktop/20190119163521_1.JPG","/home/pi/Desktop/20190119162904_1.jpg","/home/pi/Desktop/20190119153640_1.jpg","/home/pi/Desktop/20190119163119_1.jpg","/home/pi/Desktop/20190119162922_1.jpg","/home/pi/Desktop/2019011918210350_1.jpg","/home/pi/Desktop/20190119163119_1.jpg","/home/pi/Desktop/20190119162640_1.jpg","/home/pi/Desktop/20190119161440_1.jpg","/home/pi/Desktop/2019011811719_1.jpg","/home/pi/Desktop/20190119163114_1.jpg","/home/pi/Desktop/20190119143642_1.jpg","/home/pi/Desktop/20170507152646_1.jpg","/home/pi/Desktop/20190120171108_1.jpg","/home/pi/Desktop/20190119162035_1.jpg","/home/pi/Desktop/20190119133028_1.jpg","/home/pi/Desktop/20190119163803_1.jpg","/home/pi/Desktop/20190119162823_1.jpg","/home/pi/Desktop/20190119155705_1.jpg"]     
 commands = []
-command = []
+command = []             
 Player=None
 Memberinfo=[]
 Blocked=[]
 Voice=[]
+
+
 Months = {1: "January",
 2: "Feburary",
 3: "March",
@@ -38,10 +51,14 @@ Months = {1: "January",
 10: "October",
 11: "November",
 12: "December"}
+
+
+
 #Discord Bot Stat (streaming)
 @client.event
 async def on_ready():
     await client.change_presence(game=discord.Game(name="2001 A Space Odyssey ",type=1,url="https://www.twitch.tv/mdedits_"))
+    
 @client.event
 async def on_server_join(server):
     readarray=[]
@@ -72,10 +89,12 @@ async def on_join():
     for role in server.roles:
         if str(role) == "Swarm":
             await client.add_roles(Swarm,role)
+            
 @client.event
 async def on_message(message):
     global Player
     global Blocked
+    
     if message.author in Blocked:
         await client.delete_message(message)
         return
@@ -88,8 +107,14 @@ async def on_message(message):
         em = discord.Embed(colour=3447003)
         em.set_author(name="Github Link: https://bit.ly/2QHtYal")
         await client.send_message(message.channel, embed=em)
-    if str(message.content).upper()=="*THRONEMAP":
-        await client.send_file(message.channel,r"/home/pi/Desktop/Photos/Map.png")
+        
+        
+   # if str(message.content).upper()=="*CORETEMP":
+   #     em = discord.Embed(colour=3447003)
+   #     em.set_author(name="{0}".format(int(open('/sys/class/thermal/thermal_zoneO/temp').read())/1000))
+   #     await client.send_message(message.channel, embed=em)
+        
+    
     if str(message.content).upper()=='*TEST':
         em = discord.Embed(colour=3447003)
         em.set_author(name="Test Complete, Im Online!")
@@ -104,20 +129,24 @@ async def on_message(message):
                     await client.send_message(await client.get_user_info(CREATOR_ID),msg)
                     msg=""
                 if len(str(row))>2 and str(row).startswith("['http")==False:
-                    msg=msg+str(row[0])
-  #  if str(message.content).upper().startswith("*MINE|"):
-  #      if message.author.id in ALLOWED_ID:
-  #          total= int(str(message.content).split('|')[1])
-  #          for i in range (total):
-  #              await client.send_message(message.channel, "!Mine")
-  #          await client.send_message(message.channel, "!Transfer|{0}|{1}" .format(str (total),str (message.author)))
-  #  if str(message.content).upper().startswith("*KDCOMP|"):
-  #      username=str(message.content).split('|')[1]
-  #      url="https://destinytracker.com/d2/profile/pc/{0}".format(username.replace('#','-'))
-  #      headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
-  #      req=str(requests.get(url,headers).content)
-  #      KD=req.split('"},{"label":"KDA"')[0].split('"displayValue":"')[1]
-  #      await client.send_message(message.channel,"PVP Competitive KD:{0}".format(KD))
+                    msg=msg+str(row[0])                                                                
+    if str(message.content).upper().startswith("*MINE|"):
+        if message.author.id in ALLOWED_ID:
+            total= int(str(message.content).split('|')[1])
+            for i in range (total):
+                await client.send_message(message.channel, "!Mine")
+            await client.send_message(message.channel, "!Transfer|{0}|{1}" .format(str (total),str (message.author)))
+
+
+            
+    if str(message.content).upper().startswith("*KDCOMP|"):
+        username=str(message.content).split('|')[1]
+        url="https://destinytracker.com/d2/profile/pc/{0}".format(username.replace('#','-'))
+        headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
+        req=str(requests.get(url,headers).content)
+        KD=req.split('"},{"label":"KDA"')[0].split('"displayValue":"')[1]
+        await client.send_message(message.channel,"PVP Competitive KD:{0}".format(KD))
+        
     if str(message.content).upper().startswith("*KDOVERALL|"):
         username=str(message.content).split('|')[1]
         url="https://destinytracker.com/d2/profile/pc/{0}".format(username.replace('#','-'))
@@ -125,15 +154,20 @@ async def on_message(message):
         req=str(requests.get(url,headers).content)
         KD=req[66200:].split('"},{"label":"KDA"')[0].split('"displayValue":"')[1]
         await client.send_message(message.channel,"PVP Overall KD:{0}".format(KD))
-   # if str(message.content).upper().startswith("*KDQP|"):
-   #     username=str(message.content).split('|')[1]
-   #     url="https://destinytracker.com/d2/profile/pc/{0}".format(username.replace('#','-'))
-   #     headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
-   #     req=str(requests.get(url,headers).content)
-   #     KD=req[60590:].split('"},{"label":"KDA"')[0].split('"displayValue":"')[1]
-   #     await client.send_message(message.channel,"PVP Quickplay KD:{0}".format(KD))
-    #Block/Unblock Feature
+
+    if str(message.content).upper().startswith("*KDQP|"):
+        username=str(message.content).split('|')[1]
+        url="https://destinytracker.com/d2/profile/pc/{0}".format(username.replace('#','-'))
+        headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
+        req=str(requests.get(url,headers).content)
+        KD=req[60590:].split('"},{"label":"KDA"')[0].split('"displayValue":"')[1]
+        await client.send_message(message.channel,"PVP Quickplay KD:{0}".format(KD))     
+    #Block/Unblock Feature 
     if str(message.content).upper().startswith("*BLOCK|"):
+        if message.author.id!=CREATOR_ID:
+            em = discord.Embed(colour=3447003)
+            em.set_author(name="This Command Is A Creator Only Command.")
+            await client.send_message(message.channel, embed=em)
         if message.author.id==CREATOR_ID:
             Blocked.append(message.server.get_member_named(str(message.content).split('|')[1]))
             em = discord.Embed(colour=3447003)
@@ -142,16 +176,22 @@ async def on_message(message):
         else:
             em = discord.Embed(colour=3447003)
             em.set_author(name="This is a Admin Only command.")
+                                               
     if str(message.content).upper().startswith("*UNBLOCK|"):
-        Blocked.remove(message.server.get_member_named(str(message.content).split('|')[1]))
+        if message.author.id!=CREATOR_ID:
+            em = discord.Embed(colour=3447003)
+            em.set_author(name="This Command Is A Creator Only Command.")
+            await client.send_message(message.channel, embed=em)
+        if message.author.id==CREATOR_ID:
+            Blocked.remove(message.server.get_member_named(str(message.content).split('|')[1]))
+            em = discord.Embed(colour=3447003)
+            em.set_author(name="{0} Has Been Unblocked.".format(str(message.server.get_member_named(str(message.content).split('|')[1]))))
+            await client.send_message(message.channel, embed=em)
+    #Random Photos    
+    if str(message.content).upper()=="*KSP":
+        randphoto= photos[random.randrange(0,len(photos))]
         em = discord.Embed(colour=3447003)
-        em.set_author(name="{0} Has Been Unblocked.".format(str(message.server.get_member_named(str(message.content).split('|')[1]))))
-        await client.send_message(message.channel, embed=em)
-    #Random Photos
-   # if str(message.content).upper()=="*KSP":
-   #     randphoto= photos[random.randrange(0,len(photos))]
-   #     em = discord.Embed(colour=3447003)
-   #     await client.send_file(message.channel,open(randphoto,'rb'))
+        await client.send_file(message.channel,open(randphoto,'rb'))
     #Clock Command
     if str(message.content).upper()=="*CLOCK":
         now=datetime.datetime.now()
@@ -169,34 +209,72 @@ async def on_message(message):
         Player.pause()
         em = discord.Embed(colour=3447003)
         em.set_author(name="Music is Paused.")
-        await client.send_message(message.channel, embed=em)
+        await client.send_message(message.channel, embed=em) 
     if str(message.content).upper()==("*RESUME"):
         Player.resume()
         em = discord.Embed(colour=3447003)
         em.set_author(name="Music Has been Resumed.")
     if str(message.content).upper().startswith("*VOLUME|"):
-        #Player.volume
+        Player.volume
         total= int(str(message.content).split('|')[1])
         Player.volume=total/100
         em = discord.Embed(colour=3447003)
         em.set_author(name="Music Volume has been changed to {0}".format(str(total))+"%." )
-    #if str(message.content).upper()==("*STATUS")
-     #   em = discord.Embed(colour=3447003)
-         #em.set_author(name="")
-    #Restart
+        
+    if str(message.content).upper()==("*LEAVE"):
+        await client.voice_client_in(message.server).disconnect()
+        em = discord.Embed(colour=3447003)
+        em.set_author(name="Hal has been disconnect from the voice channel")
         await client.send_message(message.channel, embed=em)
+        
+    user = message.server.get_member(HAL_ID)
+    channel = message.author.voice.voice_channel
+        
+    if str(message.content).upper()==("*MOVE"):
+        await client.move_member(user, channel)
+        em = discord.Embed(colour=3447003)
+        em.set_author(name="Hal has moved channels")
+        await client.send_message(message.channel, embed=em)
+        
+    if str(message.content).upper().startswith("*AVATAR|"):
+        member = str(message.content).split('|')[1]
+        member = message.server.get_member_named(member)
+        await client.send_message(message.channel, str(member)+"'s disocrd icon URL is"+ str(member.avatar_url))
+        
+
+    if str(message.content).upper()==("*SETTIMER"):
+        em=discord.Embed(title="Timer",description="`0`m`00`s")
+        global time_message
+        time_message = await client.send_message(message.channel,embed=em)
+        await client.add_reaction(time_message,"\u2795")
+        await client.add_reaction(time_message,"\u2796")
+        await client.add_reaction(time_message,"\u25C0")
+        await client.add_reaction(time_message,"\u25B6")
+        await client.add_reaction(time_message,"\u2705")
+        global time_array
+        time_array=[0,0,0]
+        global time_s
+        time_s=0
+
+    
+   
     if str(message.content).upper()==("*RESTART"):
+        if message.author.id!=CREATOR_ID:
+            em = discord.Embed(colour=3447003)
+            em.set_author(name="This Command Is A Creator Only Command.")
+            await client.send_message(message.channel, embed=em)
+            
         if message.author.id==CREATOR_ID:
             client.loop.run_until_complete(client.logout())
-           # os.system("python3 /home/pi/Hal.py")
+            os.system("python3 /home/pi/Hal.py")
             raise SystemExit
-    #if str(message.content).upper()==("*REPEAT"):
-    #    if Player!=None:
-    #        if Player.is_playing():
-    #            Player.stop()
-    #    try:
-    #        query_string = urllib.parse.urlencode({"search_query" : str(message.content).split('|')[1]})
-    #        req = urllib.request.Request("http://www.youtube.com/results?" + query_string)
+    if str(message.content).upper()==("*REPEAT"):
+        if Player!=None:
+            if Player.is_playing():
+                Player.stop()
+        try:
+            query_string = urllib.parse.urlencode({"search_query" : str(message.content).split('|')[1]})
+            req = urllib.request.Request("http://www.youtube.com/results?" + query_string)
             if message.server.get_member_named("HAL").voice.voice_channel == None:
                 channel=message.author.voice.voice_channel
                 await client.join_voice_channel(channel)
@@ -208,49 +286,74 @@ async def on_message(message):
             else:
                 channel=message.author.voice.voice_channel
                 try:
-        #            Player=await message.server.voice_client.create_ytdl_player(link)
-        #        except:
-        #            channel=message.author.voice.voice_channel
-        #            await client.join_voice_channel(channel)
-        #            Player=await message.server.voice_client.create_ytdl_player(link)
-        #        Player.start()
-        #        #await  client.send_message(message.channel,"NOW PLAYING:|{0}".format(Player.title))
-        #        em = discord.Embed(title=Player.title, Duration=Player.duration, colour=3447003)
-        #        em.set_author(name="Now Playing")
-        #        await client.send_message(message.channel, embed=em)
-        #except IndexError:
-        #    await client.send_message(message.channel, ("Could not find '"+music4+"' on YouTube."))
-    if str(message.content).upper()=='*COMMANDS':
-        em = discord.Embed(title='Hals Commands',colour=3447003)
-        em=discord.Embed(title="Command List",description="*Add - Will Send an Invite Link to the channel so you can add him to your server.\n\
-        *Code - Will send a link to Github for Hals source Code.\n\
-        *Block| - Will Block the stated user from messaging any channel *FOR CREATOR USE ONLY*.\n\
-        *UnBlock| - Will UnBlock the stated user to allow them to message any channel *FOR CREATOR USE ONLY*.\n\
-        *Block|All - Will block all users in the server that the  message is sent in *FOR CREATOR USE ONLY*.\n\
-        *UnBlock|All - Will UnBlock all users in the server that the message is sent in *FOR CREATOR USE ONLY*.\n\
-        *Restart - Will restart Hal's program to clear any erros. *FOR CREATOR USE ONLY* \n\
-        *Meeting | #of voice channels wanted - Will create voice channels | WILL ONLY WORK IF PERMS ARE GIVEN.*FOR CREATOR USE ONLY* \n\
-        \n\
-        *Clock - Will display the date and time.\n\
-        *play| - Will play any music you want, link or title name will work.\n\
-        *Pause - Will pause the current music.\n\
-        *Repeat - Will replay the last song. \n\
-        *Steam - Will display steam profile link. \n\
-        *Thronemap- Will display Shattered Throne first encounter symbol map. \n\
-        *Test - Will test Hal's Commands in the background to see if he is fully online. \n\
-        *KDOverall| Username - Will display the accounts OVERALL PVP KD. \n\
-        *KDQP | Username - Will display the accounts Quickplay KD. \n\
-        *KDcomp| Username - Will display the accounts COMP PVP KD. \n\
-        *Commands - Display this embed message. \n\
-        *Resume - Will resume the current music.")
+                    Player=await message.server.voice_client.create_ytdl_player(link)
+                except:
+                    channel=message.author.voice.voice_channel
+                    await client.join_voice_channel(channel)
+                    Player=await message.server.voice_client.create_ytdl_player(link)
+                Player.start()
+                #await  client.send_message(message.channel,"NOW PLAYING:|{0}".format(Player.title))
+                em = discord.Embed(title=Player.title, Duration=Player.duration, colour=3447003)
+                em.set_author(name="Now Playing")
+                await client.send_message(message.channel, embed=em)
+        except IndexError:
+            await client.send_message(message.channel, ("Could not find '"+music4+"' on YouTube."))
+            
+            
+            
+    
+    if str(message.content).upper()=='*HELP':
+        em = discord.Embed(title='Help',description="** *Help for command-specific information**",colour=3447003)
+        em.add_field(name="Miscellaneous", value="*Code"+"\n"+"*Clock" + "\n"+ "*Help" + "\n"+ "*Test" + "\n"+ "*KDQP | Username" + "\n"+ "*KDcomp | Username" +"\n")
+        em.add_field(name="Owner Only", value= "*Block" + "\n" + "*UnBlock|" + "\n" + "*Block|All" + "\n"+ "*UnBlock|All" + "\n" +"*Restart" +"\n")
+        em.add_field("Music", value ="*Play|" + "\n" + "*Resume" + "\n" + "*Pause" + "\n" + "*Repeat"+ "\n" + "*Move" + "\n")
+        em.set_footer(text= "Hal" + datetime)
+        
+        
+        #em = discord.Embed(title='Hals Commands',colour=3447003)
+        #em=discord.Embed(title="Command List",description="*Add \n\
+        #*Code \n\
+        #*Block| \n\
+        #*UnBlock| \n\
+        #*Block|All \n\
+        #*UnBlock|All \n\
+        #*Restart \n\
+        #\n\
+        #*Clock \n\
+        #*play| \n\
+        #*Pause \n\
+        #*Repeat \n\
+        #*Move \n\
+        #*Test \n\
+        #*KDOverall| Username\n\
+        #*KDQP | Username \n\
+        #*KDcomp| Username \n\
+        #*Commands\n\
+        #*Resume")
+        
+    
         await client.send_message(message.channel, embed=em)
+
+
+
+
+        
     #Work in progress
     #if discord.member.get_user_info = status.offline
-    #    server.get_member_named(str(message.content).split('|')[1])
-    #    client.change_nickname(message.content.replace('IN':str(time.status.offline))
+     #   server.get_member_named(str(message.content).split('|')[1])
+      #  client.change_nickname(message.content.replace('IN':str(time.status.offline))
     #if discord.member.get_user_info = status.online
-    #    server.get_member_named(str('nickname'):
-    #Youtube_DL Music System
+     #   server.get_member_named(str('nickname'):
+        
+    #if str(message.content).upper()=="*ADDCVOICE":
+     #   await client.create_channel(message.server, 'Voice', type=discord.ChannelType.Voice)
+    #if str(message.content).upper()=='*ADDTEXT':
+     #   my_perms = discord.PermissionOverwrite(read_messages=True)                                        
+      #  await client.create_channel(server, 'secret', everyone, mine)
+    #if str(message.content).upper().startswith("*IM SORRY"):
+     #  await client.send_message(await client.get_user_info('289920025077219328'),(str(message.content)))  
+
+    #Youtube_DL Music System                                            
     if str(message.content).upper().startswith("*PLAY|"):
         if Player!=None:
             if Player.is_playing():
@@ -258,7 +361,7 @@ async def on_message(message):
         try:
             query_string = urllib.parse.urlencode({"search_query" : str(message.content).split('|')[1]})
             req = urllib.request.Request("http://www.youtube.com/results?" + query_string)
-            #with urllib.request.urlopen(req) as html:
+            with urllib.request.urlopen(req) as html:
                 searchresults = re.findall(r'href=\"\/watch\?v=(.{11})', html.read().decode())
                 link = ("http://www.youtube.com/watch?v=" + searchresults[0])
             if message.server.get_member_named("HAL").voice.voice_channel == None:
@@ -274,10 +377,10 @@ async def on_message(message):
                 channel=message.author.voice.voice_channel
                 try:
                     Player=await message.server.voice_client.create_ytdl_player(link)
-                #except:
-                #    channel=message.author.voice.voice_channel
-                #    await client.join_voice_channel(channel)
-                #    Player=await message.server.voice_client.create_ytdl_player(link)
+                except:
+                    channel=message.author.voice.voice_channel
+                    await client.join_voice_channel(channel)
+                    Player=await message.server.voice_client.create_ytdl_player(link)
                 Player.start()
                 #await  client.send_message(message.channel,"NOW PLAYING:|{0}".format(Player.title))
                 em = discord.Embed(title=Player.title, Duration=Player.duration, colour=3447003)
@@ -285,8 +388,35 @@ async def on_message(message):
                 await client.send_message(message.channel, embed=em)
         except IndexError:
             await client.send_message(message.channel, ("Could not find '"+music4+"' on YouTube."))
-    if str(message.content).upper().startswith("*MEETING|"):
-        Meeting_Room=await client.create_channel(message.server,"Meeting Room",type=discord.ChannelType.voice)
-        await client.edit_channel(Meeting_Room,user_limit=int(str(message.content).split("|")[1]))
-        Meeting_Room=Meeting_Room.id
+            
+@client.event        
+#async def on_voice_state_update(before,after):
+ #   global Meeting_Room
+ #   if before.voice_channel==after.server.get_channel(Meeting_Room):
+ #       Meeting_Room=after.server.get_channel(Meeting_Room)    
+ #       print(Meeting_Room.voice_members)
+ #       if len(Meeting_Room.voice_members)==0:
+ #           await client.delete_channel(Meeting_Room)
+#Join Server Message (Work in progress            
+async def on_server_join(server):
+    for channel in server.channels:
+        if channel.name=='general':
+            await client.send_message(channel, "Hello, Im HAL!, I have lots of commands to help improve your server!")
+@client.event
+async def on_reaction_add(reaction,user):
+    if reaction.message.id==time_message.id:
+        if user == time_message.author:
+            if reaction.emoji == "\u2795":
+                time_array[time_s]=time_array[time_s]+1
+async def timer_loop(): 
+    while True:
+        if time_message:
+            em=discord.Embed(title="Timer",description="{0}m{1}{2}s".format(time_array))
+            await client.edit_message(time,embed=em)
+        await asyncio.sleep(1)
+@client.event
+async def on_ready():
+    client.loop.create_task(timer_loop())
 client.loop.run_until_complete(client.start(TokenDoc.token))
+
+
