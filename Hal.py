@@ -19,13 +19,13 @@ import TokenDoc
 import sys
 import logging
 import threading
-import PySimpleGUI as sg
+
 
 
 #os.system('/home/pi/desktop/Backup')
 
 CREATOR_ID="653386075095695361"
-HAL_ID="4939273292618"
+HAL_ID="663923530626367509"
 ALLOWED_ID=["322490168034590732","289920025077219328","305845952986480650","285641499385921547"]
 LAST_VIDEO=None
 Meeting_Room=None
@@ -88,8 +88,6 @@ Months = {1: "January",
 12: "December"}
 
 
-sg.MsgBox('Hals Dashboard Test')
-
 #Discord Bot Stat (streaming)
 @client.event
 async def on_ready():
@@ -127,11 +125,83 @@ async def on_join():
             await client.add_roles(Swarm,role)
             
 @client.event
+async def on_reaction_add(reaction,user):
+    global time_message
+    global time_array
+    global time_s
+    if user.id == HAL_ID:
+        return
+    if reaction.emoji == "\u25C0":
+        await client.remove_reaction(reaction.message,reaction.emoji,user)
+        if time_s > 0:
+            time_s -=1
+            
+    if reaction.emoji == "\u25B6":
+        await client.remove_reaction(reaction.message,reaction.emoji,user)
+        if time_s < 2:
+            time_s +=1
+
+    if reaction.emoji == "\u2795":
+        await client.remove_reaction(reaction.message,reaction.emoji,user)
+        if time_s == 1:
+            if time_array[1] < 5:
+                time_array[1]+=1
+        if time_s == 2:
+            if time_array[2]<9:
+                time_array[2]+=1
+        seconds=int(str(time_array[1])+str(time_array[2]))
+        if seconds==59:
+            if time_s==2:
+                time_array[0]+=1
+                time_array[1]=0
+                time_array[2]=0
+        if time_s==0:
+            time_array[0]+=1
+                
+    if reaction.emoji == "\u2796":
+        await client.remove_reaction(reaction.message,reaction.emoji,user)
+        if time_array[time_s]>0:
+            time_array[time_s]-=1
+
+    if reaction.emoji == "\u2705":
+        await client.remove_reaction(reaction.message,reaction.emoji,user)
+        #boolen value true lock out future changin remove reactions, basically global boolean, asy back loop, delay 1 second, check value = true decrease integer value by 1 
+
+    string_array =[]
+    for i in range (3):
+        if i==time_s:
+            string_array.append("__`{0}`__".format(time_array[i]))
+        else:
+            string_array.append("`{0}`".format(time_array[i]))
+    em=discord.Embed(title="Timer",description="{0}m{1}{2}s".format(string_array[0],string_array[1],string_array[2]).replace('``',''))
+    time_message = await client.edit_message(time_message,embed=em)
+     
+          
+@client.event
 async def on_message(message):
     global Player
     global Blocked
     import datetime
-    
+
+
+
+    if str(message.content).upper()==("*SETTIMER"):
+        em=discord.Embed(title="Timer",description="`0`m`00`s")
+        global time_message
+        time_message = await client.send_message(message.channel,embed=em)
+        await client.add_reaction(time_message,"\u2795")
+        await client.add_reaction(time_message,"\u2796")
+        await client.add_reaction(time_message,"\u25C0")
+        await client.add_reaction(time_message,"\u25B6")
+        await client.add_reaction(time_message,"\u2705")
+        global time_array
+        time_array=[0,0,0]
+        global time_s
+        time_s=0
+        
+
+
+
     if message.author in Blocked:
         await client.delete_message(message)
         return
@@ -277,23 +347,6 @@ async def on_message(message):
         member = message.server.get_member_named(member)
         await client.send_message(message.channel, str(member)+"'s disocrd icon URL is"+ str(member.avatar_url))
         
-
-    if str(message.content).upper()==("*SETTIMER"):
-        em=discord.Embed(title="Timer",description="`0`m`00`s")
-        global time_message
-        time_message = await client.send_message(message.channel,embed=em)
-        await client.add_reaction(time_message,"\u2795")
-        await client.add_reaction(time_message,"\u2796")
-        await client.add_reaction(time_message,"\u25C0")
-        await client.add_reaction(time_message,"\u25B6")
-        await client.add_reaction(time_message,"\u2705")
-        global time_array
-        time_array=[0,0,0]
-        global time_s
-        time_s=0
-
-    
-   
     if str(message.content).upper()==("*RESTART"):
         if message.author.id!=CREATOR_ID:
             em = discord.Embed(colour=3447003)
@@ -304,6 +357,7 @@ async def on_message(message):
             client.loop.run_until_complete(client.logout())
             os.system("python3 /home/pi/Hal.py")
             raise SystemExit
+           
     if str(message.content).upper()==("*REPEAT"):
         if Player!=None:
             if Player.is_playing():
@@ -334,11 +388,21 @@ async def on_message(message):
                 await client.send_message(message.channel, embed=em)
         except IndexError:
             await client.send_message(message.channel, ("Could not find '"+music4+"' on YouTube."))
-            
-            
-        self.footer=Halfooter
-       
-    
+
+    #async def USERINFO(message,str(message.content).upper()):
+    playerinfo = {}
+
+
+
+
+    #if str(message.content).upper()=="*USERINFO":
+    #    em = discord.Embed(tile=str(playerinfo[message.author])+"'s"+"Profile Infomation",colour=DARK_NAVY)
+    #    em.set_author(name=str(message.author)+"'s User Info", icon_url=message.author.avatar_url)
+    #    em.add_field(name="Currenlty Active on",value = "```"+str(playerinfo[message.author].game+"```"+"\n"+"*Nickname in Server:** "+str(playerinfo[message.author].nickname)))
+    #    em.set_footer(text="Hal | {:%b,%d %Y}".format(today))
+    #    await client.send_message(message.channel, embed=em)
+
+
     if str(message.content).upper()=='*HELP':
         
         misc=[]
@@ -346,7 +410,7 @@ async def on_message(message):
         OO=[]
 
         em = discord.Embed(title='Help',description="** *HelpCommands for command-specific information**",colour=DARK_NAVY)
-        em.add_field(name="Miscellaneous", value="```"+"*Code"+"\n"+"*Invite"+"\n"+"*Clock" + "\n"+ "*Help" + "\n"+ "*Test" + "\n"+ "*KDQP | Username" + "\n"+ "*KDcomp | Username" +"\n".join(misc)+"```")
+        em.add_field(name="Miscellaneous", value="```"+"*Code"+"\n"+ "*SetTimer"+"\n"+"*Invite"+"\n"+"*Clock" + "\n"+ "*Help" + "\n"+ "*Test" + "\n"+ "*KDQP | Username" + "\n"+ "*KDcomp | Username" +"\n".join(misc)+"```")
         em.add_field(name="Owner Only", value="```"+ "*Block" + "\n" + "*UnBlock|" + "\n" + "*Block|All" + "\n"+ "*UnBlock|All" + "\n" +"*Restart" +"\n".join(OO)+"```")
         em.add_field(name="Music", value ="```"+"*Play|" + "\n" + "*Resume" + "\n" + "*Pause" + "\n" + "*Repeat"+ "\n" + "*Move" + "\n"+"```")
         em.set_footer(text="Hal | {:%b,%d %Y}".format(today))
@@ -417,21 +481,9 @@ async def on_server_join(server):
     for channel in server.channels:
         if channel.name=='general':
             await client.send_message(channel, "Hello, Im HAL!, I have lots of commands to help improve your server!")
-@client.event
-async def on_reaction_add(reaction,user):
-    if reaction.message.id==time_message.id:
-        if user == time_message.author:
-            if reaction.emoji == "\u2795":
-                time_array[time_s]=time_array[time_s]+1
-async def timer_loop(): 
-    while True:
-        if time_message:
-            em=discord.Embed(title="Timer",description="{0}m{1}{2}s".format(time_array))
-            await client.edit_message(time,embed=em)
-        await asyncio.sleep(1)
-@client.event
-async def on_ready():
-    client.loop.create_task(timer_loop())
+
+
+    
 client.loop.run_until_complete(client.start(TokenDoc.token))
 
 
