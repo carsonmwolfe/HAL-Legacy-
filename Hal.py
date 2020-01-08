@@ -16,6 +16,11 @@ import os
 import random
 import requests
 import TokenDoc
+import sys
+import logging
+import threading
+import PySimpleGUI as sg
+
 
 #os.system('/home/pi/desktop/Backup')
 
@@ -27,6 +32,36 @@ Meeting_Room=None
 time_message=None
 time_array=None
 time_s=0
+today = datetime.date.today()
+Halfooter=print("Hal {:%b,%d %Y}".format(today))
+EmbedColor=0x36393E
+
+
+#Embed Colors-
+DEFAULT = 0
+AQUA = 1752220
+GREEN = 3066993
+BLUE = 3447003
+PURPLE = 10181046
+GOLD = 15844367
+ORANGE = 15105570
+RED = 15158332
+GREY = 9807270
+DARKER_GREY = 8359053
+NAVY = 3426654
+DARK_AQUA = 1146986
+DARK_GREEN = 2067276
+DARK_BLUE = 2123412
+DARK_PURPLE = 7419530
+DARK_GOLD = 12745742
+DARK_ORANGE = 11027200
+DARK_RED = 10038562
+DARK_GREY = 9936031
+LIGHT_GREY = 12370112
+DARK_NAVY = 2899536
+LUMINOUS_VIVID_PINK = 16580705
+DARK_VIVID_PINK = 12320855
+
 
 
 client=discord.Client()
@@ -53,6 +88,7 @@ Months = {1: "January",
 12: "December"}
 
 
+sg.MsgBox('Hals Dashboard Test')
 
 #Discord Bot Stat (streaming)
 @client.event
@@ -94,15 +130,12 @@ async def on_join():
 async def on_message(message):
     global Player
     global Blocked
+    import datetime
     
     if message.author in Blocked:
         await client.delete_message(message)
         return
     #Simple (*) Commands
-    if str(message.content).upper()=="*ADD":
-        em = discord.Embed(colour=3447003)
-        em.set_author(name="Heres The HAL's Invite Link: https://bit.ly/2FsLi1V")
-        await client.send_message(message.channel, embed=em)
     if str(message.content).upper()=='*CODE':
         em = discord.Embed(colour=3447003)
         em.set_author(name="Github Link: https://bit.ly/2QHtYal")
@@ -110,15 +143,18 @@ async def on_message(message):
         
         
    # if str(message.content).upper()=="*CORETEMP":
-   #     em = discord.Embed(colour=3447003)
-   #     em.set_author(name="{0}".format(int(open('/sys/class/thermal/thermal_zoneO/temp').read())/1000))
-   #     await client.send_message(message.channel, embed=em)
+    #    em = discord.Embed(colour=3447003)
+     #   em.set_author(name="{0}".format(int(open('/sys/class/thermal/thermal_zoneO/temp').read())/1000))
+      #  await client.send_message(message.channel, embed=em)
         
-    
     if str(message.content).upper()=='*TEST':
         em = discord.Embed(colour=3447003)
         em.set_author(name="Test Complete, Im Online!")
         await client.send_message(message.channel, embed=em)
+        
+    if str(message.content).upper()=='*INVITE':
+        await client.send_message(message.channel,"https://bit.ly/2QSEWvX")
+                                  
     if str(message.content).upper() == "*INVITES":
         if message.author.id:
             reader=csv.reader(open(r'./Discord Servers(HAL).txt'))
@@ -300,43 +336,21 @@ async def on_message(message):
             await client.send_message(message.channel, ("Could not find '"+music4+"' on YouTube."))
             
             
-            
+        self.footer=Halfooter
+       
     
     if str(message.content).upper()=='*HELP':
-        em = discord.Embed(title='Help',description="** *Help for command-specific information**",colour=3447003)
-        em.add_field(name="Miscellaneous", value="*Code"+"\n"+"*Clock" + "\n"+ "*Help" + "\n"+ "*Test" + "\n"+ "*KDQP | Username" + "\n"+ "*KDcomp | Username" +"\n")
-        em.add_field(name="Owner Only", value= "*Block" + "\n" + "*UnBlock|" + "\n" + "*Block|All" + "\n"+ "*UnBlock|All" + "\n" +"*Restart" +"\n")
-        em.add_field("Music", value ="*Play|" + "\n" + "*Resume" + "\n" + "*Pause" + "\n" + "*Repeat"+ "\n" + "*Move" + "\n")
-        em.set_footer(text= "Hal" + datetime)
         
-        
-        #em = discord.Embed(title='Hals Commands',colour=3447003)
-        #em=discord.Embed(title="Command List",description="*Add \n\
-        #*Code \n\
-        #*Block| \n\
-        #*UnBlock| \n\
-        #*Block|All \n\
-        #*UnBlock|All \n\
-        #*Restart \n\
-        #\n\
-        #*Clock \n\
-        #*play| \n\
-        #*Pause \n\
-        #*Repeat \n\
-        #*Move \n\
-        #*Test \n\
-        #*KDOverall| Username\n\
-        #*KDQP | Username \n\
-        #*KDcomp| Username \n\
-        #*Commands\n\
-        #*Resume")
-        
-    
+        misc=[]
+        musc=[]
+        OO=[]
+
+        em = discord.Embed(title='Help',description="** *HelpCommands for command-specific information**",colour=DARK_NAVY)
+        em.add_field(name="Miscellaneous", value="```"+"*Code"+"\n"+"*Invite"+"\n"+"*Clock" + "\n"+ "*Help" + "\n"+ "*Test" + "\n"+ "*KDQP | Username" + "\n"+ "*KDcomp | Username" +"\n".join(misc)+"```")
+        em.add_field(name="Owner Only", value="```"+ "*Block" + "\n" + "*UnBlock|" + "\n" + "*Block|All" + "\n"+ "*UnBlock|All" + "\n" +"*Restart" +"\n".join(OO)+"```")
+        em.add_field(name="Music", value ="```"+"*Play|" + "\n" + "*Resume" + "\n" + "*Pause" + "\n" + "*Repeat"+ "\n" + "*Move" + "\n"+"```")
+        em.set_footer(text="Hal | {:%b,%d %Y}".format(today))
         await client.send_message(message.channel, embed=em)
-
-
-
-
         
     #Work in progress
     #if discord.member.get_user_info = status.offline
@@ -363,15 +377,15 @@ async def on_message(message):
             req = urllib.request.Request("http://www.youtube.com/results?" + query_string)
             with urllib.request.urlopen(req) as html:
                 searchresults = re.findall(r'href=\"\/watch\?v=(.{11})', html.read().decode())
-                link = ("http://www.youtube.com/watch?v=" + searchresults[0])
+                link = ("```"+ "http://www.youtube.com/watch?v=" + searchresults[0]+"```")
             if message.server.get_member_named("HAL").voice.voice_channel == None:
                 channel=message.author.voice.voice_channel
                 await client.join_voice_channel(channel)
                 Player=await message.server.voice_client.create_ytdl_player(link)
                 Player.start()
                 #await client.send_message(message.channel,"NOW PLAYING:|{0}".format(Player.title))
-                em = discord.Embed(title=Player.title, description=('Duration: ')+str(int(round(Player.duration/60)))+(' Minutes \nLink: '+link), colour=3447003)
-                em.set_author(name="Now Playing")
+                em = discord.Embed(title=Player.title, description=("```"+'Duration: '+"```")+str(int(round(Player.duration/60)))+(' Minutes \nLink: '+link), colour=3447003)
+                em.set_author(name="```"+"Now Playing"+"```")
                 await client.send_message(message.channel, embed=em)
             else:
                 channel=message.author.voice.voice_channel
@@ -385,6 +399,7 @@ async def on_message(message):
                 #await  client.send_message(message.channel,"NOW PLAYING:|{0}".format(Player.title))
                 em = discord.Embed(title=Player.title, Duration=Player.duration, colour=3447003)
                 em.set_author(name="Now Playing")
+                em.set_footer(text="Hal | {:%b,%d %Y}".format(today))
                 await client.send_message(message.channel, embed=em)
         except IndexError:
             await client.send_message(message.channel, ("Could not find '"+music4+"' on YouTube."))
