@@ -19,6 +19,7 @@ import TokenDoc
 import sys
 import logging
 import threading
+import PySimpleGUI as sg
 
 
 
@@ -35,7 +36,7 @@ time_s=0
 today = datetime.date.today()
 Halfooter=print("Hal {:%b,%d %Y}".format(today))
 EmbedColor=0x36393E
-
+countdown = False
 
 #Embed Colors-
 DEFAULT = 0
@@ -88,6 +89,22 @@ Months = {1: "January",
 12: "December"}
 
 
+#sg.theme('DarkAmber')
+
+#layout = [  [sg.Text('Hal Dashboard')],
+#            [sg.Text('Status: Online')],
+#            [sg.Text('Core Temp:'),sg.InputText()],
+#            [sg.Button('Test'), sg.Button('Cancel Program')]]
+
+#window = sg.Window('Hal Dashboard',layout)
+
+#while True:
+#        event, values = window.read()
+#        if event in (None, 'Stop'):
+#            break
+#window.close()
+
+
 #Discord Bot Stat (streaming)
 @client.event
 async def on_ready():
@@ -129,6 +146,11 @@ async def on_reaction_add(reaction,user):
     global time_message
     global time_array
     global time_s
+    global countdown
+
+    if countdown:
+        return
+        
     if user.id == HAL_ID:
         return
     if reaction.emoji == "\u25C0":
@@ -165,7 +187,12 @@ async def on_reaction_add(reaction,user):
 
     if reaction.emoji == "\u2705":
         await client.remove_reaction(reaction.message,reaction.emoji,user)
-        #boolen value true lock out future changin remove reactions, basically global boolean, asy back loop, delay 1 second, check value = true decrease integer value by 1 
+        countdown=True
+        for reaction in reaction.message:
+            await client.remove_reaction(reaction.message,reaction.emoji,reaction.user)
+
+        
+
 
     string_array =[]
     for i in range (3):
@@ -481,8 +508,28 @@ async def on_server_join(server):
     for channel in server.channels:
         if channel.name=='general':
             await client.send_message(channel, "Hello, Im HAL!, I have lots of commands to help improve your server!")
+@client.event
+async def on_ready():
+    client.loop.add_task(countdown_loop())
 
-
+async def countdown_loop():
+  global countdown
+  while countdown:
+    if time_array[2]>0:
+      time_array[2]-=1
+    else:
+      time_array[2]=9
+      if time_array[1]>0:
+        time_array[1]-=1
+      else:
+        time_array[1]=5
+        if time_array[0]>0:
+          time_array[0]-=1
+        else:
+          countdown=False
+          em=discord.Embed(title="Timer",description="**Timer Finished**")
+          await client.edit_message(time_message,em=em)
+    await asyncio.sleep(1)
     
 client.loop.run_until_complete(client.start(TokenDoc.token))
 
