@@ -33,7 +33,7 @@ time_message=None
 time_array=None
 time_s=0
 farts=[]
-path=r"C:\Users\cmwol\Desktop\sounds"
+path=r"/home/pi/Desktop/HAL/sounds"
 for files in os.walk(path):
   for file in files:  
     farts.append(file)
