@@ -19,7 +19,7 @@ import TokenDoc
 import sys
 import logging
 import threading
-import PySimpleGUI as sg
+
 
 
 
@@ -27,7 +27,7 @@ import PySimpleGUI as sg
 
 CREATOR_ID="653386075095695361"
 HAL_ID="663923530626367509"
-ALLOWED_ID=["322490168034590732","289920025077219328","305845952986480650","285641499385921547"]
+#ALLOWED_ID=["322490168034590732","289920025077219328","305845952986480650","285641499385921547"]
 LAST_VIDEO=None
 Meeting_Room=None
 time_message=None
@@ -188,8 +188,8 @@ async def on_reaction_add(reaction,user):
     if reaction.emoji == "\u2705":
         await client.remove_reaction(reaction.message,reaction.emoji,user)
         countdown=True
-        for reaction in reaction.message:
-            await client.remove_reaction(reaction.message,reaction.emoji,reaction.user)
+        for reaction in reaction.message.reactions:
+            await client.remove_reaction(discord.utils.get(client.messages, id=reaction.message.id),reaction.emoji,reaction.message.server.get_member(HAL_ID))
 
         
 
@@ -347,6 +347,8 @@ async def on_message(message):
         Player.resume()
         em = discord.Embed(colour=3447003)
         em.set_author(name="Music Has been Resumed.")
+        await client.send_message(message.channel, embed=em) 
+        
     if str(message.content).upper().startswith("*VOLUME|"):
         Player.volume
         total= int(str(message.content).split('|')[1])
@@ -355,14 +357,45 @@ async def on_message(message):
         em.set_author(name="Music Volume has been changed to {0}".format(str(total))+"%." )
         
     if str(message.content).upper()==("*LEAVE"):
-        await client.voice_client_in(message.server).disconnect()
-        em = discord.Embed(colour=3447003)
-        em.set_author(name="Hal has been disconnect from the voice channel")
-        await client.send_message(message.channel, embed=em)
+        if message.author.id==CREATOR_ID:
+            await client.voice_client_in(message.server).disconnect()
+            em = discord.Embed(colour=3447003)
+            em.set_author(name="Hal has been disconnect from the voice channel")
+            await client.send_message(message.channel, embed=em)
+            
+        if message.author.id!=CREATOR_ID:
+            em = discord.Embed(colour=3447003)
+            em.set_author(name="This Command Is A Creator Only Command.")
+            await client.send_message(message.channel, embed=em)
         
     user = message.server.get_member(HAL_ID)
     channel = message.author.voice.voice_channel
         
+        
+        
+        
+        
+        
+        
+    #if str(message.content).upper().startswith==(*FART|):
+     #   if Player!=None:
+      #      if Player.is_playing():
+       #         Player.stop()
+        #try:
+         #   if message.server.get_member_named("HAL").voice.voice_channel == None:
+          #      channel=message.author.voice.voice_channel
+           #     await client.join_voice_channel(channel)
+            
+        
+    
+    
+    
+    
+    
+    
+    
+    
+    
     if str(message.content).upper()==("*MOVE"):
         await client.move_member(user, channel)
         em = discord.Embed(colour=3447003)
@@ -385,6 +418,9 @@ async def on_message(message):
             os.system("python3 /home/pi/Hal.py")
             raise SystemExit
            
+           
+           
+        
     if str(message.content).upper()==("*REPEAT"):
         if Player!=None:
             if Player.is_playing():
@@ -437,9 +473,9 @@ async def on_message(message):
         OO=[]
 
         em = discord.Embed(title='Help',description="** *HelpCommands for command-specific information**",colour=DARK_NAVY)
-        em.add_field(name="Miscellaneous", value="```"+"*Code"+"\n"+ "*SetTimer"+"\n"+"*Invite"+"\n"+"*Clock" + "\n"+ "*Help" + "\n"+ "*Test" + "\n"+ "*KDQP | Username" + "\n"+ "*KDcomp | Username" +"\n".join(misc)+"```")
-        em.add_field(name="Owner Only", value="```"+ "*Block" + "\n" + "*UnBlock|" + "\n" + "*Block|All" + "\n"+ "*UnBlock|All" + "\n" +"*Restart" +"\n".join(OO)+"```")
-        em.add_field(name="Music", value ="```"+"*Play|" + "\n" + "*Resume" + "\n" + "*Pause" + "\n" + "*Repeat"+ "\n" + "*Move" + "\n"+"```")
+        em.add_field(name="Miscellaneous", value="```"+"*Code"+"\n"+ "*Test" + "\n" + "*Avatar| Username" + "\n" + "*SetTimer"+"\n"+"*Invite"+"\n"+"*Clock" + "\n"+ "*Help" + "\n"+ "*Test" + "\n"+ "*KDQP | Username" + "\n"+ "*KDcomp | Username" +"\n".join(misc)+"```")
+        em.add_field(name="Owner Only", value="```"+ "*Block" + "\n" + "*Leave" + "\n" + "*UnBlock|" + "\n" + "*Block|All" + "\n"+ "*UnBlock|All" + "\n" +"*Restart" +"\n".join(OO)+"```")
+        em.add_field(name="Music", value ="```"+"*Play|" + "\n" + "*Volume" + "\n"+ "*Resume" + "\n" +"*Repeat" + "\n" + "*Pause" + "\n" + "*Repeat"+ "\n" + "*Move" + "\n"+"```")
         em.set_footer(text="Hal | {:%b,%d %Y}".format(today))
         await client.send_message(message.channel, embed=em)
         
@@ -468,15 +504,15 @@ async def on_message(message):
             req = urllib.request.Request("http://www.youtube.com/results?" + query_string)
             with urllib.request.urlopen(req) as html:
                 searchresults = re.findall(r'href=\"\/watch\?v=(.{11})', html.read().decode())
-                link = ("```"+ "http://www.youtube.com/watch?v=" + searchresults[0]+"```")
-            if message.server.get_member_named("HAL").voice.voice_channel == None:
+                link = ("http://www.youtube.com/watch?v=" + searchresults[0])
+            if message.server.get_member_named("Hal").voice.voice_channel == None:
                 channel=message.author.voice.voice_channel
                 await client.join_voice_channel(channel)
                 Player=await message.server.voice_client.create_ytdl_player(link)
                 Player.start()
                 #await client.send_message(message.channel,"NOW PLAYING:|{0}".format(Player.title))
-                em = discord.Embed(title=Player.title, description=("```"+'Duration: '+"```")+str(int(round(Player.duration/60)))+(' Minutes \nLink: '+link), colour=3447003)
-                em.set_author(name="```"+"Now Playing"+"```")
+                em = discord.Embed(title=Player.title, description=('Duration: ')+str(int(round(Player.duration/60)))+(' Minutes \nLink: '+link), colour=3447003)
+                em.set_author(name="Now Playing")
                 await client.send_message(message.channel, embed=em)
             else:
                 channel=message.author.voice.voice_channel
@@ -510,7 +546,7 @@ async def on_server_join(server):
             await client.send_message(channel, "Hello, Im HAL!, I have lots of commands to help improve your server!")
 @client.event
 async def on_ready():
-    client.loop.add_task(countdown_loop())
+    client.loop.create_task(countdown_loop())
 
 async def countdown_loop():
   global countdown
@@ -530,6 +566,7 @@ async def countdown_loop():
           em=discord.Embed(title="Timer",description="**Timer Finished**")
           await client.edit_message(time_message,em=em)
     await asyncio.sleep(1)
+    
     
 client.loop.run_until_complete(client.start(TokenDoc.token))
 
