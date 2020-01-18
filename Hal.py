@@ -27,12 +27,28 @@ import threading
 
 CREATOR_ID="653386075095695361"
 HAL_ID="663923530626367509"
-#ALLOWED_ID=["322490168034590732","289920025077219328","305845952986480650","285641499385921547"]
 LAST_VIDEO=None
 Meeting_Room=None
 time_message=None
 time_array=None
 time_s=0
+farts=[]
+path=r"C:\Users\cmwol\Desktop\sounds"
+for files in os.walk(path):
+  for file in files:  
+    farts.append(file)
+
+farts = farts[2]
+
+counter=-1
+for fart in farts:
+  counter+=1
+  farts[counter]=path+"\\"+fart
+
+print (farts)
+
+
+
 today = datetime.date.today()
 Halfooter=print("Hal {:%b,%d %Y}".format(today))
 EmbedColor=0x36393E
@@ -65,10 +81,7 @@ DARK_VIVID_PINK = 12320855
 
 
 
-client=discord.Client()
-#photos(1)=["/home/pi/Desktop/20190119163521_1.JPG","/home/pi/Desktop/20190119162904_1.jpg","/home/pi/Desktop/20190119153640_1.jpg","/home/pi/Desktop/20190119163119_1.jpg","/home/pi/Desktop/20190119162922_1.jpg","/home/pi/Desktop/2019011918210350_1.jpg","/home/pi/Desktop/20190119163119_1.jpg","/home/pi/Desktop/20190119162640_1.jpg","/home/pi/Desktop/20190119161440_1.jpg","/home/pi/Desktop/2019011811719_1.jpg","/home/pi/Desktop/20190119163114_1.jpg","/home/pi/Desktop/20190119143642_1.jpg","/home/pi/Desktop/20170507152646_1.jpg","/home/pi/Desktop/20190120171108_1.jpg","/home/pi/Desktop/20190119162035_1.jpg","/home/pi/Desktop/20190119133028_1.jpg","/home/pi/Desktop/20190119163803_1.jpg","/home/pi/Desktop/20190119162823_1.jpg","/home/pi/Desktop/20190119155705_1.jpg"]     
-commands = []
-command = []             
+client=discord.Client()         
 Player=None
 Memberinfo=[]
 Blocked=[]
@@ -87,22 +100,6 @@ Months = {1: "January",
 10: "October",
 11: "November",
 12: "December"}
-
-
-#sg.theme('DarkAmber')
-
-#layout = [  [sg.Text('Hal Dashboard')],
-#            [sg.Text('Status: Online')],
-#            [sg.Text('Core Temp:'),sg.InputText()],
-#            [sg.Button('Test'), sg.Button('Cancel Program')]]
-
-#window = sg.Window('Hal Dashboard',layout)
-
-#while True:
-#        event, values = window.read()
-#        if event in (None, 'Stop'):
-#            break
-#window.close()
 
 
 #Discord Bot Stat (streaming)
@@ -190,8 +187,6 @@ async def on_reaction_add(reaction,user):
         countdown=True
         for reaction in reaction.message.reactions:
             await client.remove_reaction(discord.utils.get(client.messages, id=reaction.message.id),reaction.emoji,reaction.message.server.get_member(HAL_ID))
-
-        
 
 
     string_array =[]
@@ -372,30 +367,45 @@ async def on_message(message):
     channel = message.author.voice.voice_channel
         
         
+    
         
+    if str(message.content).upper()==("*FART"):
+
+        em = discord.Embed(colour=3447003)
+        em.set_author(name="Here it comes...")
+        await client.send_message(message.channel, embed=em)
+        time.sleep(1)
+        em = discord.Embed(colour=3447003)
+        em.set_author(name="3")
+        await client.send_message(message.channel, embed=em)
+        time.sleep(1)
+        em = discord.Embed(colour=3447003)
+        em.set_author(name="2")
+        await client.send_message(message.channel, embed=em)
+        time.sleep(1)
+        em = discord.Embed(colour=3447003)
+        em.set_author(name="1")
+        await client.send_message(message.channel, embed=em)
+        channel=message.author.voice.voice_channel
         
+        voice = await client.join_voice_channel(channel)
+        player = voice.create_ffmpeg_player(random.choice(farts))
+        player.start()
+
+
+    
+        time.sleep(4)
+        em = discord.Embed(colour=3447003)
+        em.set_author(name="Funny has concluded")
+        await client.send_message(message.channel, embed=em)
+        await client.voice_client_in(message.server).disconnect()
         
+
         
+
+
         
-    #if str(message.content).upper().startswith==(*FART|):
-     #   if Player!=None:
-      #      if Player.is_playing():
-       #         Player.stop()
-        #try:
-         #   if message.server.get_member_named("HAL").voice.voice_channel == None:
-          #      channel=message.author.voice.voice_channel
-           #     await client.join_voice_channel(channel)
             
-        
-    
-    
-    
-    
-    
-    
-    
-    
-    
     if str(message.content).upper()==("*MOVE"):
         await client.move_member(user, channel)
         em = discord.Embed(colour=3447003)
@@ -455,9 +465,6 @@ async def on_message(message):
     #async def USERINFO(message,str(message.content).upper()):
     playerinfo = {}
 
-
-
-
     #if str(message.content).upper()=="*USERINFO":
     #    em = discord.Embed(tile=str(playerinfo[message.author])+"'s"+"Profile Infomation",colour=DARK_NAVY)
     #    em.set_author(name=str(message.author)+"'s User Info", icon_url=message.author.avatar_url)
@@ -473,26 +480,11 @@ async def on_message(message):
         OO=[]
 
         em = discord.Embed(title='Help',description="** *HelpCommands for command-specific information**",colour=DARK_NAVY)
-        em.add_field(name="Miscellaneous", value="```"+"*Code"+"\n"+ "*Test" + "\n" + "*Avatar| Username" + "\n" + "*SetTimer"+"\n"+"*Invite"+"\n"+"*Clock" + "\n"+ "*Help" + "\n"+ "*Test" + "\n"+ "*KDQP | Username" + "\n"+ "*KDcomp | Username" +"\n".join(misc)+"```")
-        em.add_field(name="Owner Only", value="```"+ "*Block" + "\n" + "*Leave" + "\n" + "*UnBlock|" + "\n" + "*Block|All" + "\n"+ "*UnBlock|All" + "\n" +"*Restart" +"\n".join(OO)+"```")
+        em.add_field(name="Miscellaneous", value="```"+"*Code"+"\n"+ "*Test" + "\n" + "*SetTimer"+"\n"+"*Invite"+"\n"+"*Clock" + "\n"+ "*Help" + "\n"+ "*Test" + "\n" + "*Avatar|Username" + "\n"+ "*KDQP|Username" + "\n"+ "*KDcomp|Username" +"\n".join(misc)+"```")
         em.add_field(name="Music", value ="```"+"*Play|" + "\n" + "*Volume" + "\n"+ "*Resume" + "\n" +"*Repeat" + "\n" + "*Pause" + "\n" + "*Repeat"+ "\n" + "*Move" + "\n"+"```")
+        em.add_field(name="Owner Only", value="```"+ "*Block" + "\n" +"*Restart" +"\n"+ "*Leave"  + "\n" + "*Block|All" + "\n"+ "*UnBlock|All" + "\n" + "\n" + "*UnBlock|Username".join(OO)+"```")
         em.set_footer(text="Hal | {:%b,%d %Y}".format(today))
         await client.send_message(message.channel, embed=em)
-        
-    #Work in progress
-    #if discord.member.get_user_info = status.offline
-     #   server.get_member_named(str(message.content).split('|')[1])
-      #  client.change_nickname(message.content.replace('IN':str(time.status.offline))
-    #if discord.member.get_user_info = status.online
-     #   server.get_member_named(str('nickname'):
-        
-    #if str(message.content).upper()=="*ADDCVOICE":
-     #   await client.create_channel(message.server, 'Voice', type=discord.ChannelType.Voice)
-    #if str(message.content).upper()=='*ADDTEXT':
-     #   my_perms = discord.PermissionOverwrite(read_messages=True)                                        
-      #  await client.create_channel(server, 'secret', everyone, mine)
-    #if str(message.content).upper().startswith("*IM SORRY"):
-     #  await client.send_message(await client.get_user_info('289920025077219328'),(str(message.content)))  
 
     #Youtube_DL Music System                                            
     if str(message.content).upper().startswith("*PLAY|"):
@@ -524,22 +516,14 @@ async def on_message(message):
                     Player=await message.server.voice_client.create_ytdl_player(link)
                 Player.start()
                 #await  client.send_message(message.channel,"NOW PLAYING:|{0}".format(Player.title))
-                em = discord.Embed(title=Player.title, Duration=Player.duration, colour=3447003)
+                em = discord.Embed(title=Player.title, description=('Duration: ')+str(int(round(Player.duration/60)))+(' Minutes \nLink: '+link), colour=3447003)
                 em.set_author(name="Now Playing")
                 em.set_footer(text="Hal | {:%b,%d %Y}".format(today))
                 await client.send_message(message.channel, embed=em)
         except IndexError:
             await client.send_message(message.channel, ("Could not find '"+music4+"' on YouTube."))
             
-@client.event        
-#async def on_voice_state_update(before,after):
- #   global Meeting_Room
- #   if before.voice_channel==after.server.get_channel(Meeting_Room):
- #       Meeting_Room=after.server.get_channel(Meeting_Room)    
- #       print(Meeting_Room.voice_members)
- #       if len(Meeting_Room.voice_members)==0:
- #           await client.delete_channel(Meeting_Room)
-#Join Server Message (Work in progress            
+@client.event                   
 async def on_server_join(server):
     for channel in server.channels:
         if channel.name=='general':
