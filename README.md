@@ -8,7 +8,7 @@ Coded in: Python
 HAL Status : Active
 
 Last Updated: September 16, 2019 
-Next Update: October 14, 2019 
+ 
 
 
 
